@@ -261,7 +261,7 @@ die;
     {
         if($this->request->is_ajax()){
                 
-            if(!Auth::hasAccess('product.delete')){
+            if(!Auth::hasAccess('products.delete')){
                 $this->response->json(array(
                     'status' => 'error',
                     'message' => 'Nincs engedélye a művelet végrehajtásához!'

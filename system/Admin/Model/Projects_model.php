@@ -1,12 +1,65 @@
 <?php
+namespace System\Admin\Model;
+use System\Core\AdminModel;
 
-class Projects_model extends Model {
+class Projects_model extends AdminModel {
+
+    protected $table = 'projects';
 
     /**
      * Constructor, létrehozza az adatbáziskapcsolatot
      */
     function __construct() {
         parent::__construct();
+    }
+
+    /**
+     *  INSERT
+     */
+    public function insert($data)
+    {
+        return $this->query->insert($data);
+    }
+
+    /**
+     *  UPDATE
+     */
+    public function update($id, $data)
+    {
+        $this->query->set_where('project_id', '=', $id);    
+        return $this->query->update($data);
+    }
+
+    /**
+     * DELETE
+     */
+    public function delete($id)
+    {
+        return $this->query->delete('project_id', '=', $id);
+    }
+
+   /**
+     *  Status mező értékét módosítja
+     *  
+     *  @param  integer $id 
+     *  @param  integer $data (0 vagy 1)    
+     *  @return integer
+     */
+    public function changeStatus($id, $data)
+    {
+        $this->query->set_where('project_id', '=', $id);
+        return $this->query->update(array('project_status' => $data));
+    }
+
+    /**
+     * Egy referenciához tartozó kép nevét adja vissza
+     */
+    public function selectPicture($id)
+    {
+        $this->query->set_columns(array('project_photo'));
+        $this->query->set_where('project_id', '=', $id);
+        $result = $this->query->select();
+        return $result[0]['project_photo'];
     }
 
     /**

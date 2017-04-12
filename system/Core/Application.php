@@ -156,6 +156,9 @@ class Application {
                 // referenciák
                 $router->get('/projects', 'projects@index');
                 $router->get('/projects/new_project', 'projects@new_project');
+                $router->get('/projects/view_project/:id', 'projects@view_project');
+                $router->post('/projects/delete', 'projects@delete'); // AJAX
+                $router->post('/projects/change_status', 'projects@change_status'); // AJAX
                 $router->get('/projects/category', 'projects@category');
                 $router->get('/projects/category_insert', 'projects@category_insert');
 

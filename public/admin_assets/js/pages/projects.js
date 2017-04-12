@@ -1,77 +1,66 @@
-/**
- References oldal
- **/
 var References = function () {
 
     var projectsTable = function () {
 
         var table = $('#projects');
-        // begin first table
-
 
         table.dataTable({
-            // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+
             "language": {
-                "aria": {
-                    "sortAscending": ": activate to sort column ascending",
-                    "sortDescending": ": activate to sort column descending"
+                // metronic specific
+                    //"metronicGroupActions": "_TOTAL_ sor kiválasztva: ",
+                    //"metronicAjaxRequestGeneralError": "A kérés nem hajtható végre, ellenőrizze az internet kapcsolatot!",
+
+                // data tables specific                
+                "decimal":        "",
+                "emptyTable":     "Nincs megjeleníthető adat!",
+                "info":           "_START_ - _END_ elem &nbsp; _TOTAL_ elemből",
+                "infoEmpty":      "Nincs megjeleníthető adat!",
+                "infoFiltered":   "(Szűrve _MAX_ elemből)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     " _MENU_ elem/oldal",
+                "loadingRecords": "Betöltés...",
+                "processing":     "Feldolgozás...",
+                "search":         "Keresés:",
+                "zeroRecords":    "Nincs egyező elem",
+                "paginate": {
+                    "previous":   "Előző",
+                    "next":       "Következő",
+                    "last":       "Utolsó",
+                    "first":      "Első",
+                    "pageOf":     "&nbsp;/&nbsp;"
                 },
-                "emptyTable": "No data available in table",
-                "info": "_START_ - _END_ elem _TOTAL_ elemből",
-                "infoEmpty": "Nincs megjeleníthető adat!",
-                "infoFiltered": "(Szűrve _MAX_ elemből)",
-                "lengthMenu": "Show _MENU_ entries",
-                "search": "Search:",
-                "zeroRecords": "Nincs egyező elem"
+                "aria": {
+                    "sortAscending":  ": aktiválja a növekvő rendezéshez",
+                    "sortDescending": ": aktiválja a csökkenő rendezéshez"
+                }
             },
-            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js). 
-            // So when dropdowns used the scrollable div should be removed. 
-            // "dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
 
             "bStateSave": false, // save datatable state(pagination, sort, etc) in cookie.
 
-            "columns": [{
-                    "orderable": false
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": false
-                }],
+
+            // set default column settings
+            "columnDefs": [
+                {"orderable": false, "searchable": false, "targets": 0},
+                {"orderable": true, "searchable": false, "targets": 1},
+                {"orderable": true, "searchable": true, "targets": 2},
+                {"orderable": true, "searchable": true, "targets": 3},
+                {"orderable": true, "searchable": true, "targets": 4},
+                {"orderable": true, "searchable": true, "targets": 5},
+                {"orderable": true, "searchable": true, "targets": 6},
+                {"orderable": false, "searchable": false, "targets": 7}
+            ],
+
             "lengthMenu": [
                 [5, 15, 20, -1],
-                [5, 15, 20, "All"] // change per page values here
+                [5, 15, 20, "Összes"] // change per page values here
             ],
             // set the initial value
             "pageLength": 15,
+            
             "pagingType": "bootstrap_full_number",
-            "language": {
-                "search": "Keresés: ",
-                "lengthMenu": "  _MENU_ elem/oldal",
-                "paginate": {
-                    "previous": "Előző",
-                    "next": "Következő",
-                    "last": "Utolsó",
-                    "first": "Első"
-                }
-            },
-            "columnDefs": [{// set default column settings
-                    'orderable': false,
-                    'targets': [0]
-                }, {
-                    "searchable": false,
-                    "targets": [0]
-                }],
+
             "order": [
                 [2, "asc"]
             ] // set column as a default sort by asc
@@ -79,84 +68,22 @@ var References = function () {
 
         });
 
-        var tableWrapper = jQuery('#projects_wrapper');
-
         table.find('.group-checkable').change(function () {
             var set = jQuery(this).attr("data-set");
             var checked = jQuery(this).is(":checked");
             jQuery(set).each(function () {
                 if (checked) {
-                    $(this).attr("checked", true);
-                    $(this).parents('tr').addClass("active");
+                    $(this).prop("checked", true);
+                    //$(this).parents('tr').addClass("active");
                 } else {
-                    $(this).attr("checked", false);
-                    $(this).parents('tr').removeClass("active");
+                    $(this).prop("checked", false);
+                    //$(this).parents('tr').removeClass("active");
                 }
             });
             jQuery.uniform.update(set);
         });
-
-        table.on('change', 'tbody tr .checkboxes', function () {
-            $(this).parents('tr').toggleClass("active");
-        });
-
-        tableWrapper.find('.dataTables_length select').addClass("form-control input-sm input-inline"); // modify table per page dropdown
     }
 
-    var deleteOneReferenceConfirm = function () {
-        $('[id*=delete_project]').on('click', function (e) {
-            e.preventDefault();
-            var deleteLink = $(this).attr('href');
-            //var projectName = $(this).closest("tr").find('td:nth-child(3)').text();
-
-            bootbox.setDefaults({
-                locale: "hu",
-            });
-
-            bootbox.confirm("Biztosan törölni akarja a terméket?", function (result) {
-                if (result) {
-                    window.location.href = deleteLink;
-                }
-            });
-
-        });
-    }
-
-    var deleteReferencesConfirm = function () {
-        $('#del_project_form').submit(function (e) {
-            e.preventDefault();
-            currentForm = this;
-            bootbox.setDefaults({
-                locale: "hu",
-            });
-            bootbox.confirm("Biztosan törölni akarja a kijelölt termékeket?", function (result) {
-                if (result) {
-                    // a submit() nem küldi el a gomb name értékét, ezért be kell rakni egy hidden elemet
-                    //$('#del_project_form').append($("<input>").attr("type", "hidden").attr("name", "delete_project_submit").val("submit"));
-                    currentForm.submit();
-                }
-            });
-        });
-    }
-
-    var enableDisableButtons = function () {
-
-        var deleteReferenceSubmit = $('button[name="delete_project_submit"]');
-        var checkAll = $('input.group-checkable');
-        var checkboxes = $('input.checkboxes');
-
-        deleteReferenceSubmit.attr('disabled', true);
-
-        checkboxes.change(function () {
-            $(this).closest("tr").find('.btn-group a').attr('disabled', $(this).is(':checked'));
-            deleteReferenceSubmit.attr('disabled', !checkboxes.is(':checked'));
-        });
-        checkAll.change(function () {
-            checkboxes.closest("tr").find('.btn-group a').attr('disabled', $(this).is(':checked'));
-            deleteReferenceSubmit.attr('disabled', !checkboxes.is(':checked'));
-        });
-
-    }
 
     var resetSearchForm = function () {
         $('#reset_search_form').on('click', function () {
@@ -167,83 +94,6 @@ var References = function () {
                     .removeAttr('selected');
         });
     }
-
-    var hideAlert = function () {
-        $('div.alert').delay(2500).slideUp(750);
-    }
-
-
-    var makeActiveConfirm = function () {
-        $('[id*=make_active], [id*=make_inactive]').on('click', function (e) {
-            e.preventDefault();
-
-            var action = $(this).attr('data-action');
-            var projectId = $(this).attr('rel');
-            var url = $(this).attr('href');
-            var elem = this;
-            //var projectName = $(this).closest("tr").find('td:nth-child(2)').text();
-
-            bootbox.setDefaults({
-                locale: "hu",
-            });
-            bootbox.confirm("Biztosan módosítani akarja a termék státuszát?", function (result) {
-                if (result) {
-                    makeActive(projectId, action, url, elem);
-                }
-            });
-        });
-    }
-
-    var makeActive = function (projectId, action, url, elem) {
-        //console.log(elem);
-        $.ajax({
-            type: "POST",
-            data: {
-                id: projectId,
-                action: action
-            },
-            url: url,
-            dataType: "json",
-            beforeSend: function () {
-                $('#loadingDiv').html('<img src="public/admin_assets/img/loader.gif">');
-                $('#loadingDiv').show();
-            },
-            complete: function () {
-                $('#loadingDiv').hide();
-            },
-            success: function (result) {
-                if (result.status == 'success') {
-
-                    if (action == 'make_inactive') {
-                        $(elem).html('<i class="fa fa-check"></i> Aktivál');
-                        $(elem).attr('data-action', 'make_active');
-                        //$(elem).attr('href', 'admin/projects/make_active');
-                        $(elem).closest('td').prev().html('<span class="label label-sm label-danger">Inaktív</span>');
-                        $("#ajax_message").html('<div class="alert alert-success">A termék inaktív státuszba került!</div>');
-                        hideAlert();
-                    }
-                    else if (action == 'make_active') {
-                        $(elem).html('<i class="fa fa-ban"></i> Blokkol');
-                        $(elem).attr('data-action', 'make_inactive');
-                        //$(elem).attr('href', 'admin/projects/make_inactive');
-                        $(elem).closest('td').prev().html('<span class="label label-sm label-success">Aktív</span>');
-                        $("#ajax_message").html('<div class="alert alert-success">A termék aktív státuszba került!</div>');
-                        hideAlert();
-                    }
-
-                } else {
-                    console.log('Hiba: az adatbázis művelet nem történt meg!');
-                    $("#ajax_message").html('<div class="alert alert-success">Adatbázis hiba! A termék státusza nem változott meg!</div>');
-                    hideAlert();
-                }
-            },
-            error: function (result, status, e) {
-                alert(e);
-            }
-        });
-
-    }
-
 
 
     /*----------------------------------------------------------*/
@@ -365,23 +215,6 @@ var References = function () {
     }
 
 
-    /*----------------------------------------------------------*/
-
-
-    var printTable = function () {
-        $('#print_projects').on('click', function (e) {
-            e.preventDefault();
-            var divToPrint = document.getElementById("projects");
-            console.log(divToPrint);
-//		divToPrint = $('#projects tr').find('th:last, td:last').remove();
-            newWin = window.open("");
-            newWin.document.write(divToPrint.outerHTML);
-            newWin.print();
-            newWin.close();
-        })
-
-    }
-
 
     return {
         //main function to initiate the module
@@ -391,14 +224,26 @@ var References = function () {
             }
 
             projectsTable();
-            deleteOneReferenceConfirm();
-            deleteReferencesConfirm();
-            enableDisableButtons();
             resetSearchForm();
-            hideAlert();
-            makeActiveConfirm();
-            printTable();
             viewReferenceDialog();
+
+            vframework.deleteItems({
+                table_id: "projects",
+                url: "admin/projects/delete"
+            });
+
+            vframework.changeStatus({
+                url: "admin/projects/change_status",
+            });
+
+            vframework.printTable({
+                print_button_id: "print_projects", // elem id-je, amivel elindítjuk a nyomtatást 
+                table_id: "projects",
+                title: "Referenciák listája"
+            });
+
+            vframework.hideAlert();
+
         }
 
     };
@@ -406,9 +251,5 @@ var References = function () {
 }();
 
 $(document).ready(function () {
-    Metronic.init(); // init metronic core componets
-    Layout.init(); // init layout
-    QuickSidebar.init(); // init quick sidebar
-    Demo.init(); // init demo features 
     References.init(); // init projects page
 });

@@ -58,7 +58,7 @@ var NewProject = function () {
                 //console.log('submitHandler');
                 error1.hide();
                 //success1.show();
-                Metronic.blockUI({
+                App.blockUI({
                     boxed: true,
                     message: 'Feldolgozás...'
                 });
@@ -70,11 +70,6 @@ var NewProject = function () {
         });
     }
 
-
-
-    var hideAlert = function () {
-        //      $('div.alert').delay(2500).slideUp(750);
-    }
 
     var cropReferencePhoto = function () {
         var userPhoto = $('#project_image');
@@ -101,20 +96,15 @@ var NewProject = function () {
         //main function to initiate the module
         init: function () {
             handleValidation();
-            hideAlert();
             cropReferencePhoto();
             ckeditorInit();
+            vframework.hideAlert();
         }
     };
 
 
 }();
 
-
 jQuery(document).ready(function () {
-    Metronic.init(); // init metronic core componets
-    Layout.init(); // init layout
-    QuickSidebar.init(); // init quick sidebar
-    Demo.init(); // init demo features	
     NewProject.init();
 });

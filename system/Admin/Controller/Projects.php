@@ -1,22 +1,17 @@
 <?php
+namespace System\Admin\Controller;
+use System\Core\AdminController;
+use System\Core\View;
+use System\Libs\Auth;
+use System\Libs\Config;
+use System\Libs\DI;
 
-/**
- * Class projects
- *
- * @author Várnagy Attila
- * 
- */
-class Projects extends Controller {
+class Projects extends AdminController {
 
     function __construct() {
         parent::__construct();
-        Auth::handleLogin();
-        require_once "system/libs/logged_in_user.php";
-        $this->user = new Logged_in_user();
-        $this->check_access("menu_referenciak");
-        $this->view->user = $this->user;
         $this->loadModel('projects_model');
-        $this->loadClass('category');
+        $this->loadModel('product_categories_model');
     }
 
     /**
@@ -24,94 +19,143 @@ class Projects extends Controller {
      *
      * 
      */
-    public function index() {
-        $this->view->title = 'Termékek oldal';
-        $this->view->description = 'Termékek oldal description';
+    public function index()
+    {
+        Auth::hasAccess('projects.index', $this->request->get_httpreferer());
 
-        // az oldalspecifikus css linkeket berakjuk a view objektum css_link tulajdonságába (ami egy tömb)
-        // a make_link() metódus az anyakontroller metódusa (így egyszerűen meghívható bármelyik kontrollerben)
-        $this->view->css_link[] = $this->make_link('css', ADMIN_ASSETS, 'plugins/select2/select2.css');
-        $this->view->css_link[] = $this->make_link('css', ADMIN_ASSETS, 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css');
+        $data['title'] = 'Termékek oldal';
+        $data['description'] = 'Termékek oldal description';
+        $data['all_projects'] = $this->projects_model->all_projects_query();
 
-        // az oldalspecifikus javascript linkeket berakjuk a view objektum js_link tulajdonságába (ami egy tömb)
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/select2/select2.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/datatables/media/js/jquery.dataTables.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/bootbox/bootbox.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'datatable.js');
-
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/projects.js');
-
-        $this->view->all_projects = $this->projects_model->all_projects_query();
-
-        $this->view->render('projects/tpl_projects');
+        $view = new View();
+        $view->setHelper(array('url_helper'));
+        $view->add_links(array('datatable', 'bootbox', 'vframework'));
+        $view->add_link('js', ADMIN_JS . 'pages/projects.js');
+        $view->render('projects/tpl_projects', $data);
     }
 
     /**
      * 	Termék minden adatának megjelenítése
      */
-    public function view_project() {
-        $this->view->title = 'Admin termék részletek oldal';
-        $this->view->description = 'Admin termék részletek oldal description';
-        // az oldalspecifikus css linkeket berakjuk a view objektum css_link tulajdonságába (ami egy tömb)
-        // az oldalspecifikus javascript linkeket berakjuk a view objektum js_link tulajdonságába (ami egy tömb)
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/common.js');
+    public function view_project($id)
+    {
+        $id = (int)$id;
+        $data['title'] = 'Admin termék részletek oldal';
+        $data['description'] = 'Admin termék részletek oldal description';
+        
+        $data['content'] = $this->projects_model->one_project_alldata_query($id);
 
-        $this->view->content = $this->projects_model->one_project_alldata_query($this->registry->params['id']);
-
-        $this->view->render('projects/tpl_project_view');
+        $view = new View();
+        $view->add_link('js', ADMIN_JS . 'pages/common.js');
+        $view->render('projects/tpl_project_view', $data);
     }
 
     /**
      * 	Termék minden adatának megjelenítése Ajax-szal
      */
-    public function view_project_ajax() {
-        if (Util::is_ajax()) {
-            $this->view->content = $this->projects_model->one_project_alldata_query_ajax();
+    public function view_project_ajax()
+    {
+        if ($this->request->is_ajax()) {
+            $data['content'] = $this->projects_model->one_project_alldata_query_ajax();
 
-
-            $this->view->render('projects/tpl_project_view_modal', true);
+            $view = new View();
+            $view->set_layout(null);
+            $view->render('projects/tpl_project_view_modal', $data);
         } else {
-            Util::redirect('error');
+            $this->response->redirect('admin/error');
+        }
+    }
+
+    /**
+     * (AJAX) Az products táblában módosítja a product_status mező értékét
+     *
+     * @return void
+     */
+    public function change_status()
+    {
+        if ( $this->request->is_ajax() ) {
+            // jogosultság vizsgálat
+            if (!Auth::hasAccess('projects.change_status')) {
+                $this->response->json(array(
+                    "status" => 'error',
+                    "message" => 'Nincs engedélye a művelet végrehajtásához.'
+                ));         
+            }               
+            
+            if ( $this->request->has_post('action') && $this->request->has_post('id') ) {
+            
+                $id = $this->request->get_post('id', 'integer');
+                $action = $this->request->get_post('action');
+
+                if($action == 'make_active') {
+                    $result = $this->projects_model->changeStatus($id, 1);
+                    if($result !== false){
+                        $this->response->json(array(
+                            "status" => 'success',
+                            "message" => 'A projekt aktiválása megtörtént!'
+                        ));     
+                    } else {
+                        $this->response->json(array(
+                            "status" => 'error',
+                            "message" => 'Adatbázis hiba! A projekt státusza nem változott meg!'
+                        ));
+                    }
+                }
+                if($action == 'make_inactive') {
+                    $result = $this->projects_model->changeStatus($id, 0);
+                    if($result !== false){
+                        $this->response->json(array(
+                            "status" => 'success',
+                            "message" => 'A projekt blokkolása megtörtént!'
+                        ));     
+                    } else {
+                        $this->response->json(array(
+                            "status" => 'error',
+                            "message" => 'Adatbázis hiba! A projekt státusza nem változott meg!'
+                        ));
+                    }
+                    
+                }
+            } else {
+                $this->response->json(array(
+                    "status" => 'error',
+                    "message" => 'unknown_error'
+                ));
+            }
+
+        } else {
+            $this->response->redirect('admin/error');
         }
     }
 
     /**
      * 	Új termék hozzáadása
      */
-    public function new_project() {
+    public function new_project()
+    {
         // új termék hozzáadása
-        if (!empty($_POST)) {
+        if ($this->request->is_post()) {
+            
+
+
             $result = $this->projects_model->insert_project();
             if ($result) {
                 Util::redirect('projects');
             } else {
                 Util::redirect('projects/new_project');
             }
+
         }
 
-        $this->view->title = 'Új refrencia oldal';
-        $this->view->description = 'Új refrencia description';
+        $data['title'] = 'Új refrencia oldal';
+        $data['description'] = 'Új refrencia description';
 
-        $this->view->css_link[] = $this->make_link('css', ADMIN_ASSETS, 'plugins/bootstrap-fileupload/bootstrap-fileupload.css');
-        $this->view->css_link[] = $this->make_link('css', ADMIN_ASSETS, 'plugins/croppic/croppic.css');
-        // js linkek generálása
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/croppic/croppic.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/bootstrap-fileupload/bootstrap-fileupload.js');
-        
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/ckeditor/ckeditor.js');
-        //form validator	
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/dist/jquery.validate.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/dist/additional-methods.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/localization/messages_hu.js');
+        $data['project_category_list'] = $this->projects_model->category_list_query();
 
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/new_project.js');
-
-// termék kategóriák lekérdezése az option listához
-        $this->view->project_category_list = $this->projects_model->category_list_query();
-        //       $this->view->project_category_list_with_path = $this->category->project_categories_with_path($this->view->project_category_list);
-        // template betöltése
-        $this->view->render('projects/tpl_new_project');
+        $view = new View();
+        $view->add_links(array('bootstrap-fileupload', 'croppic', 'ckeditor', 'validation', 'vframework'));
+        $view->add_link('js', ADMIN_JS . 'pages/new_project.js');
+        $view->render('projects/tpl_new_project', $data);
     }
 
     /**
@@ -123,6 +167,89 @@ class Projects extends Controller {
         $this->projects_model->delete_project();
         Util::redirect('projects');
     }
+
+
+    /**
+     * DELETE
+     */
+    public function delete()
+    {
+        if($this->request->is_ajax()){
+
+            if(!Auth::hasAccess('projects.delete')){
+                $this->response->json(array(
+                    'status' => 'error',
+                    'message' => 'Nincs engedélye a művelet végrehajtásához!'
+                ));
+            }               
+            // a POST-ban kapott item_id egy tömb
+            $id_arr = $this->request->get_post('item_id');
+
+            // a sikeres törlések számát tárolja
+            $success_counter = 0;
+            // a sikeresen törölt id-ket tartalmazó tömb
+            $success_id = array();      
+            // a sikertelen törlések számát tárolja
+            $fail_counter = 0; 
+            
+            // helperek példányosítása
+            $file_helper = DI::get('file_helper');
+            $url_helper = DI::get('url_helper');
+
+            // bejárjuk a $id_arr tömböt és minden elemen végrehajtjuk a törlést
+            foreach($id_arr as $id) {
+                //átalakítjuk a integer-ré a kapott adatot
+                $id = (int)$id;
+                //lekérdezzük a törlendő blog képének a nevét, hogy törölhessük a szerverről
+                $photo_name = $this->projects_model->selectPicture($id);
+                
+                //blog törlése  
+                $result = $this->projects_model->delete($id);
+                
+                if($result !== false) {
+                    // ha a törlési sql parancsban nincs hiba
+                    if($result > 0){
+                        //ha van feltöltött képe a bloghoz (az adatbázisban szerepel a file-név)
+                        if(!empty($photo_name)){
+                            $picture_path = Config::get('projectphoto.upload_path') . $photo_name;
+                            $thumb_picture_path = $url_helper->thumbPath($picture_path);
+                            // képek törlése
+                            $file_helper->delete(array($picture_path, $thumb_picture_path));
+                        }               
+                        //sikeres törlés
+                        $success_counter += $result;
+                        $success_id[] = $id;
+                    }
+                    else {
+                        //sikertelen törlés
+                        $fail_counter++;
+                    }
+                }
+                else {
+                    // ha a törlési sql parancsban hiba van
+                    $this->response->json(array(
+                        'status' => 'error',
+                        'message_error' => 'Hibas sql parancs: nem sikerult a DELETE lekerdezes az adatbazisbol!',                  
+                    ));
+                }
+            }
+
+            // üzenetek visszaadása
+            $respond = array();
+            $respond['status'] = 'success';
+            
+            if ($success_counter > 0) {
+                $respond['message_success'] = $success_counter . ' termék törölve.';
+            }
+            if ($fail_counter > 0) {
+                $respond['message_error'] = $fail_counter . ' terméket már töröltek!';
+            }
+
+            // respond tömb visszaadása
+            $this->response->json($respond);
+
+        }    
+    } 
 
     /**
      * 	Termék módosítása
@@ -266,28 +393,6 @@ class Projects extends Controller {
         Util::redirect('projects/category');
     }
 
-    /**
-     * (AJAX) A projects táblában módosítja az project_status mező értékét
-     *
-     * @return void
-     */
-    public function change_status() {
-        if (Util::is_ajax()) {
-            if (isset($_POST['action']) && isset($_POST['id'])) {
-
-                $id = (int) $_POST['id'];
-
-                if ($_POST['action'] == 'make_active') {
-                    $this->projects_model->change_status_query($id, 1);
-                }
-                if ($_POST['action'] == 'make_inactive') {
-                    $this->projects_model->change_status_query($id, 0);
-                }
-            }
-        } else {
-            Util::redirect('error');
-        }
-    }
 
     /**
      * 	A termék képét tölti fel a szerverre, és készít egy kisebb méretű képet is.
