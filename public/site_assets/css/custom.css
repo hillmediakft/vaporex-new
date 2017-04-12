@@ -1,0 +1,105 @@
+/*//////////////////////////////////////////////////////////////////////////////////////////*/
+/* CUSTOM CSS */
+/*//////////////////////////////////////////////////////////////////////////////////////////*/
+
+a, button, button:after, a:focus, button:focus {
+   outline: 0;
+}
+button::-moz-focus-inner {
+  border: 0;
+}
+
+.mezes_bodon {
+    display: none;
+}
+
+.custom-color{
+	background-color:#526aff !important; 
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    background-color: #e27300;
+    border: 1px solid #e27300 !important;
+    color: #fff !important;
+    cursor: default;
+    z-index: 2;
+}
+
+.pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 13px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #ddd;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    margin-left: -1px;
+}
+
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+    background-color: #e27300;
+    border: 1px solid #e27300 !important;
+    color: #fff !important;
+}
+#map {
+    height: 300px;
+}
+a i {
+	padding-bottom: 0px;
+        vertical-align: top;
+}
+label a i {
+    padding-bottom: 5px;
+    vertical-align: bottom;
+    margin-left: 10px;
+}
+label a {
+   cursor: pointer;
+}
+
+h4 {
+    color: #e27300;
+}
+p i {
+    margin-right: 10px;
+    color: #e27300;
+}
+#submit-button.button-loading::before {
+    animation: 2s linear 0s normal none infinite running fa-spin;
+    content: "\f110";
+    display: inline-block;
+    font-family: FontAwesome;
+    font-size: 14px;
+    margin: 0 10px 0 0;
+}
+.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled.focus, .btn-primary.focus[disabled], fieldset[disabled] .btn-primary.focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary.active[disabled], fieldset[disabled] .btn-primary.active {
+    background-color: #e27300;
+    border-color: #e27300;
+    opacity: 0.8;
+}
+#kalkulator-valasz {
+    margin-top: 20px;
+}
+#kalkulator-valasz [class^="flaticon-"]::before, #kalkulator-valasz [class*=" flaticon-"]::before, #kalkulator-valasz [class^="flaticon-"]::after, #kalkulator-valasz [class*=" flaticon-"]::after {
+    font-size: 40px;
+}
+#register_submit.button-loading::before, 
+#login_submit.button-loading::before, 
+#edit_user_submit.button-loading::before, 
+#add_to_cart_button.button-loading::before {
+    animation: 2s linear 0s normal none infinite running fa-spin;
+    content: "\f110";
+    display: inline-block;
+    font-family: FontAwesome;
+    font-size: 14px;
+    margin: 0 10px 0 0;
+}
+
+.form-control {
+    text-transform: none;
+}
+
+.badge {
+    background-color: #e27300;
+}

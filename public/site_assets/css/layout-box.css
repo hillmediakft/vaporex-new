@@ -1,0 +1,31 @@
+
+
+/*//////////////////////////////////////////////////////////////////////////////////////////*/
+/* LAYOUT BOX  */
+/*//////////////////////////////////////////////////////////////////////////////////////////*/
+
+body {
+    background: url('../img/bg.jpg') repeat fixed;
+}
+html .top-header {
+    background: none repeat scroll 0 0 #333333;
+}
+html .top-header * {
+    color: #fff !important;
+}
+.layout-theme {
+    max-width: 1200px;
+    margin: 20px auto;
+    background: #fff;
+    box-shadow: 0px 2px 5px #333;
+}
+html .full-title-name {
+    min-width: 285px;
+}
+.slide-desc .isotope-desc-content {
+    display: none;
+}
+
+html #filter {
+    margin-top: -37px;
+}
