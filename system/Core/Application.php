@@ -123,11 +123,11 @@ class Application {
                 $router->get('/', 'home@index');
                 $router->get('/home', 'home@index');
 
-                // login logout	
+            // login logout	
                 $router->match('GET|POST', '/login', 'login@index');
                 $router->get('/login/logout', 'login@logout');
 
-                // pages	
+            // pages	
                 $router->get('/pages', 'pages@index');
                 $router->match('GET|POST', '/pages/update/:id', 'pages@update', array('id'));
 
@@ -135,41 +135,47 @@ class Application {
                 //$router->get('/content', 'content@index');
                 //$router->match('GET|POST', '/content/edit/:id', 'content@edit', array('id'));
 
-                // termékek
+            // termékek
                 $router->get('/products', 'products@index');
                 $router->get('/products/view_product/:id', 'products@view_product');
                 $router->match('GET|POST', '/products/new_product', 'products@new_product');
                 $router->match('GET|POST', '/products/update_product/:id', 'products@update_product');
+                $router->post('/products/delete', 'products@delete');
+                $router->post('/products/change_status', 'products@change_status');
+                // termék kategória
                 $router->match('GET|POST', '/products/category', 'products@category');
                 $router->match('GET|POST', '/products/category_insert', 'products@category_insert');
                 $router->match('GET|POST', '/products/category_update/:id', 'products@category_update');
-                $router->post('/products/delete', 'products@delete');
                 $router->get('/products/category_delete/:id', 'products@category_delete');
-                $router->post('/products/change_status', 'products@change_status');
                 // termék és termékkategória képek feltöltése, vágása
                 $router->post('/products/product_crop_img_upload/(upload)', 'products@product_crop_img_upload', array('upload'));
                 $router->post('/products/product_crop_img_upload/(crop)', 'products@product_crop_img_upload', array('crop'));
                 $router->post('/products/product_category_crop_img_upload/(upload)', 'products@product_category_crop_img_upload', array('upload'));
                 $router->post('/products/product_category_crop_img_upload/(crop)', 'products@product_category_crop_img_upload', array('crop'));
 
-
-                // referenciák
+            // referenciák
                 $router->get('/projects', 'projects@index');
-                $router->get('/projects/new_project', 'projects@new_project');
                 $router->get('/projects/view_project/:id', 'projects@view_project');
+                $router->match('GET|POST', '/projects/new_project', 'projects@new_project');
+                $router->match('GET|POST', '/projects/update_project/:id', 'projects@update_project');
                 $router->post('/projects/delete', 'projects@delete'); // AJAX
                 $router->post('/projects/change_status', 'projects@change_status'); // AJAX
+                // referencia kategória
                 $router->get('/projects/category', 'projects@category');
-                $router->get('/projects/category_insert', 'projects@category_insert');
+                $router->match('GET|POST', '/projects/category_insert', 'projects@category_insert');
+                $router->match('GET|POST', '/projects/category_update/:id', 'projects@category_update');
+                $router->post('/projects/category_delete', 'projects@category_delete'); // AJAX
+                // referencia képek feltöltése, vágása
+                $router->post('/projects/project_crop_img_upload/(upload)', 'projects@project_crop_img_upload', array('upload'));
+                $router->post('/projects/project_crop_img_upload/(crop)', 'projects@project_crop_img_upload', array('crop'));
 
-                // GYIK
+            // GYIK
                 $router->get('/gyik', 'gyik@index');
                 $router->get('/gyik/new_gyik', 'gyik@new_gyik');
                 $router->get('/gyik/category', 'gyik@category');
                 $router->get('/gyik/category_insert', 'gyik@category_insert');
 
-
-                // user	
+            // user	
                 $router->get('/user', 'user@index');
                 $router->match('GET|POST', '/user/insert', 'user@insert');
                 $router->match('GET|POST', '/user/profile/:id', 'user@profile', array('id'));
@@ -181,7 +187,7 @@ class Application {
                 $router->match('GET|POST', '/user/edit_roles/:id', 'user@edit_roles', array('id'));
                 $router->post('/user/deleteimage', 'User@deleteImage');
 
-                // photo gallery	
+            // photo gallery	
                 $router->get('/photo-gallery', 'photo_gallery@index');
                 $router->post('/photo-gallery/delete_photo', 'photo_gallery@delete_photo');
                 $router->post('/photo-gallery/delete_category', 'photo_gallery@delete_category');
@@ -189,20 +195,20 @@ class Application {
                 $router->match('GET|POST', '/photo-gallery/update/:id', 'photo_gallery@update', array('id'));
                 $router->get('/photo-gallery/category', 'photo_gallery@category');
 
-                // slider	
+            // slider	
                 $router->get('/slider', 'slider@index');
                 $router->post('/slider/delete', 'slider@delete');
                 $router->match('GET|POST', '/slider/insert', 'slider@insert');
                 $router->match('GET|POST', '/slider/update/:id', 'slider@update', array('id'));
                 $router->post('/slider/order', 'slider@order');
 
-                // testimonials	
+            // testimonials	
                 $router->get('/testimonials', 'testimonials@index');
                 $router->match('GET|POST', '/testimonials/insert', 'testimonials@insert');
                 $router->match('GET|POST', '/testimonials/update/:id', 'testimonials@update', array('id'));
                 $router->get('/testimonials/delete/:id', 'testimonials@delete', array('id'));
 
-                // clients	
+            // clients	
                 $router->get('/clients', 'clients@index');
                 $router->post('/clients/client_img_upload/(upload)', 'clients@client_img_upload', array('upload'));
                 $router->post('/clients/client_img_upload/(crop)', 'clients@client_img_upload', array('crop'));
@@ -211,23 +217,23 @@ class Application {
                 $router->match('GET|POST', '/clients/update/:id', 'clients@update', array('id'));
                 $router->post('/clients/order', 'clients@order');
 
-                // file manager	
+            // file manager	
                 $router->get('/filemanager', 'FileManager@index');
 
-                // settings	
+            // settings	
                 $router->match('GET|POST', '/settings', 'settings@index');
 
-                // user manual	
+            // user manual	
                 $router->get('/user-manual', 'UserManual@index');
 
-                // newsletter	
+            // newsletter	
                 $router->get('/newsletter', 'newsletter@index');
                 $router->get('/newsletter/newsletter_stats', 'newsletter@newsletter_stats');
                 $router->post('/newsletter/delete', 'newsletter@delete');
                 $router->match('GET|POST', '/newsletter/insert', 'newsletter@insert');
                 $router->match('GET|POST', '/newsletter/update/:id', 'newsletter@update', array('id'));
 
-                // blog	
+            // blog	
                 $router->get('/blog', 'blog@index');
                 $router->post('/blog/delete', 'blog@delete');
                 $router->match('GET|POST', '/blog/insert', 'blog@insert');
@@ -237,7 +243,7 @@ class Application {
                 $router->post('/blog/category_delete', 'blog@category_delete');
                 $router->post('/blog/change_status', 'blog@change_status');
 
-                //documents
+            //documents
                 $router->get('/documents', 'documents@index');
                 $router->match('GET|POST', '/documents/insert', 'documents@insert');
                 $router->match('GET|POST', '/documents/update/:id', 'documents@update', array('id'));
@@ -251,10 +257,10 @@ class Application {
                 $router->post('/documents/file_delete', 'documents@file_delete');
                 $router->get('/documents/download/:filename', 'documents@download', array('file'));
                                 
-                // log lista oldal
+            // log lista oldal
                 $router->get('/logs', 'Logs@index');
 
-                // error	
+            // error	
                 $router->set404('error@index');
             });
         }
