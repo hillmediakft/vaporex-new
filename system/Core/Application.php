@@ -171,6 +171,7 @@ class Application {
 
             // GYIK
                 $router->get('/gyik', 'gyik@index');
+                $router->get('/gyik/view_gyik/:id', 'gyik@view_gyik');
                 $router->get('/gyik/new_gyik', 'gyik@new_gyik');
                 $router->get('/gyik/category', 'gyik@category');
                 $router->get('/gyik/category_insert', 'gyik@category_insert');
