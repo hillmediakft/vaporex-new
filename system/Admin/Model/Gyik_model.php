@@ -1,13 +1,58 @@
 <?php
+namespace System\Admin\Model;
+use System\Core\AdminModel;
 
-class Gyik_model extends Model {
+class Gyik_model extends AdminModel {
+
+    protected $table = 'gyik';
 
     /**
      * Constructor, létrehozza az adatbáziskapcsolatot
      */
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
+
+    /**
+     *  INSERT
+     */
+    public function insert($data)
+    {
+        return $this->query->insert($data);
+    }
+
+    /**
+     *  UPDATE
+     */
+    public function update($id, $data)
+    {
+        $this->query->set_where('gyik_id', '=', $id);    
+        return $this->query->update($data);
+    }
+
+    /**
+     * DELETE
+     */
+    public function delete($id)
+    {
+        return $this->query->delete('gyik_id', '=', $id);
+    }
+
+   /**
+     *  Status mező értékét módosítja
+     *  
+     *  @param  integer $id 
+     *  @param  integer $data (0 vagy 1)    
+     *  @return integer
+     */
+    public function changeStatus($id, $data)
+    {
+        $this->query->set_where('gyik_id', '=', $id);
+        return $this->query->update(array('gyik_status' => $data));
+    }
+
+
 
     /**
      * 	Egy termék minden adatát lekérdezi a részletek megjelenítéséhez
@@ -100,6 +145,18 @@ class Gyik_model extends Model {
         return $this->query->select();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 	Lekérdezi a termék kategóriákat a gyik_categories táblából (és az id-ket)
      * 	@param	integer	$id  (ha csak egy elemet akarunk lekérdezni)
@@ -137,107 +194,6 @@ class Gyik_model extends Model {
         return $result;
     }
 
-    /**
-     * 	Termék hozzáadása
-     */
-    public function insert_gyik() {
-
-        $error_counter = 0;
-        //megnevezés ellenőrzése	
-        if (empty($_POST['gyik_title'])) {
-            $error_counter++;
-            Message::set('error', 'A referencia magyar megnevezése nem lehet üres!');
-        }
-        if (empty($_POST['gyik_category_id'])) {
-            $error_counter++;
-            Message::set('error', 'Választani kell egy kategóriát!');
-        }
-
-        if ($error_counter != 0) {
-            return false;
-        }
-
-        $data['gyik_photo'] = (!empty($_POST['img_url'])) ? $_POST['img_url'] : Config::get('gyikphoto.upload_path') . Config::get('gyikphoto.default_photo');
-
-
-        $data['gyik_title'] = $_POST['gyik_title'];
-        $data['gyik_description'] = $_POST['gyik_description'];
-       
-        $data['gyik_category_id'] = $_POST['gyik_category_id'];
-        $data['gyik_status'] = $_POST['gyik_status'];
-
-        //létrehozás dátuma timestamp
-        $data['gyik_create_timestamp'] = time();
-
-
-
-
-        // új adatok az adatbázisba
-        $this->query->reset();
-        //           $this->query->debug(true);
-        $this->query->set_table(array('gyik'));
-        $this->query->insert($data);
-
-        Message::set('success', 'Referencia sikeresen hozzáadva.');
-        return true;
-    }
-
-    /**
-     * 	Munka módosítása
-     *
-     * 	@param integer	$id
-     * @return bool true, ha sikeres; false, ha nem
-     */
-    public function update_gyik($id) {
-
-        $error_counter = 0;
-        //megnevezés ellenőrzése	
-        if (empty($_POST['gyik_title'])) {
-            $error_counter++;
-            Message::set('error', 'A termék magyar megnevezése nem lehet üres!');
-        }
-        if (empty($_POST['gyik_category_id'])) {
-            $error_counter++;
-            Message::set('error', 'Választani kell egy kategóriát!');
-        }
-
-        if ($error_counter != 0) {
-            return false;
-        }
-
-        if ($error_counter == 0) {
-
-
-            $data['gyik_title'] = $_POST['gyik_title'];
-            $data['gyik_description'] = $_POST['gyik_description'];
-            $data['gyik_category_id'] = $_POST['gyik_category_id'];
-            $data['gyik_status'] = $_POST['gyik_status'];
-           
-            // módosítás dátuma timestamp formátumban
-            $data['gyik_update_timestamp'] = time();
-
-            // új adatok az adatbázisba
-            $this->query->reset();
-            $this->query->set_table(array('gyik'));
-            $this->query->set_where('gyik_id', '=', $id);
-            $result = $this->query->update($data);
-
-
-
-            if ($result) {
-                if (!empty($image_to_delete)) {
-                    //régi képek törlése
-                        Util::del_file($image_to_delete);
-                        Util::del_file(Util::thumb_path($image_to_delete));
-                }
-                Message::set('success', 'Referencia adatai sikeresen módosítva.');
-                return true;
-            }
-        } else {
-            Message::set('error', 'Ismeretlen hiba!');
-            return false;
-        }
-    }
 
     /**
      * Termék (illetve termékek) törlése

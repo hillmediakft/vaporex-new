@@ -1,111 +1,116 @@
 <?php
+namespace System\Admin\Controller;
+use System\Core\AdminController;
+use System\Core\View;
+use System\Libs\Auth;
 
-/**
- * Class gyik
- *
- * @author Várnagy Attila
- * 
- */
-class Gyik extends Controller {
+class Gyik extends AdminController {
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
-        Auth::handleLogin();
-        require_once "system/libs/logged_in_user.php";
-        $this->user = new Logged_in_user();
-        $this->check_access("menu_gyik");
-        $this->view->user = $this->user;
         $this->loadModel('gyik_model');
+        $this->loadModel('gyikCategory_model');
     }
 
     /**
      * index metódus
-     *
-     * 
      */
-    public function index() {
-        $this->view->title = 'GYIK oldal';
-        $this->view->description = 'GYIK oldal description';
+    public function index()
+    {
+        Auth::hasAccess('gyik.index', $this->request->get_httpreferer());
 
-        // az oldalspecifikus css linkeket berakjuk a view objektum css_link tulajdonságába (ami egy tömb)
-        // a make_link() metódus az anyakontroller metódusa (így egyszerűen meghívható bármelyik kontrollerben)
-        $this->view->css_link[] = $this->make_link('css', ADMIN_ASSETS, 'plugins/select2/select2.css');
-        $this->view->css_link[] = $this->make_link('css', ADMIN_ASSETS, 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css');
+        $data['title'] = 'GYIK oldal';
+        $data['description'] = 'GYIK oldal description';
+        $data['all_gyik'] = $this->gyik_model->all_gyik_query();
 
-        // az oldalspecifikus javascript linkeket berakjuk a view objektum js_link tulajdonságába (ami egy tömb)
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/select2/select2.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/datatables/media/js/jquery.dataTables.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/bootbox/bootbox.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'datatable.js');
-
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/gyik.js');
-
-        $this->view->all_gyik = $this->gyik_model->all_gyik_query();
-
-        $this->view->render('gyik/tpl_gyik');
+        $view = new View();
+        $view->add_links(array('datatable', 'bootbox', 'vframework'));
+        $view->add_link('js', ADMIN_JS . 'pages/gyik.js');
+        $view->render('gyik/tpl_gyik', $data);
     }
 
     /**
      * 	Termék minden adatának megjelenítése
      */
-    public function view_gyik() {
-        $this->view->title = 'Admin termék részletek oldal';
-        $this->view->description = 'Admin termék részletek oldal description';
-        // az oldalspecifikus css linkeket berakjuk a view objektum css_link tulajdonságába (ami egy tömb)
-        // az oldalspecifikus javascript linkeket berakjuk a view objektum js_link tulajdonságába (ami egy tömb)
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/common.js');
+    public function view_gyik($id)
+    {
+        $id = (int)$id;    
+        $data['title'] = 'Admin termék részletek oldal';
+        $data['description'] = 'Admin termék részletek oldal description';
+        $data['content'] = $this->gyik_model->one_gyik_alldata_query($id);
 
-        $this->view->content = $this->gyik_model->one_gyik_alldata_query($this->registry->params['id']);
-
-        $this->view->render('gyik/tpl_gyik_view');
+        $view = new View();
+        $view->add_link('js', ADMIN_JS . 'pages/common.js');
+        $view->render('gyik/tpl_gyik_view', $data);
     }
 
     /**
      * 	Termék minden adatának megjelenítése Ajax-szal
      */
-    public function view_gyik_ajax() {
-        if (Util::is_ajax()) {
-            $this->view->content = $this->gyik_model->one_gyik_alldata_query_ajax();
+    public function view_gyik_ajax()
+    {
+        if ($this->request->is_ajax()) {
+            $data['content'] = $this->gyik_model->one_gyik_alldata_query_ajax();
 
-
-            $this->view->render('gyik/tpl_gyik_view_modal', true);
+            $view = new View();
+            $view->set_layout(null);
+            $view->render('gyik/tpl_gyik_view_modal', $data);
         } else {
-            Util::redirect('error');
+            $this->response->redirect('admin/error');
         }
     }
 
     /**
-     * 	Új termék hozzáadása
+     * 	Új gyik hozzáadása
      */
-    public function new_gyik() {
-        // új termék hozzáadása
-        if (!empty($_POST)) {
-            $result = $this->gyik_model->insert_gyik();
-            if ($result) {
-                Util::redirect('gyik');
+    public function new_gyik()
+    {
+        if ($this->request->is_post()) {
+
+            $data['gyik_title'] = $this->request->get_post('gyik_title');
+            $data['gyik_description'] = $this->request->get_post('gyik_description');
+            $data['gyik_category_id'] = $this->request->get_post('gyik_category_id', 'integer');
+            $data['gyik_status'] = $this->request->get_post('gyik_status', 'integer');
+            //létrehozás dátuma timestamp
+            $data['gyik_create_timestamp'] = time();
+
+
+            $error_counter = 0;
+            //megnevezés ellenőrzése    
+            if (empty($data['gyik_title'])) {
+                $error_counter++;
+                Message::set('error', 'A referencia magyar megnevezése nem lehet üres!');
+            }
+            if (empty($data['gyik_category_id'])) {
+                $error_counter++;
+                Message::set('error', 'Választani kell egy kategóriát!');
+            }
+
+            if ($error_counter != 0) {
+                $this->response->redirect('admin/gyik/new_gyik');
+            }
+
+            // új adatok az adatbázisba
+            $result = $this->gyik_model->insert($data);
+
+            if ($result !== false) {
+                Message::set('success', 'Referencia sikeresen hozzáadva.');
+                $this->response->redirect('admin/gyik');
             } else {
-                Util::redirect('gyik/new_gyik');
+                Message::set('error', 'Adatbázis lekérdezési hiba!');
+                $this->response->redirect('admin/gyik/new_gyik');
             }
         }
 
-        $this->view->title = 'Új refrencia oldal';
-        $this->view->description = 'Új refrencia description';
+        $data['title'] = 'Új refrencia oldal';
+        $data['description'] = 'Új refrencia description';
+        $data['gyik_category_list'] = $this->gyik_model->category_list_query();
 
-       
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/ckeditor/ckeditor.js');
-        //form validator	
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/jquery.validate.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/additional-methods.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/localization/messages_hu.js');
-
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/new_gyik.js');
-
-// termék kategóriák lekérdezése az option listához
-        $this->view->gyik_category_list = $this->gyik_model->category_list_query();
-        //       $this->view->gyik_category_list_with_path = $this->category->gyik_categories_with_path($this->view->gyik_category_list);
-        // template betöltése
-        $this->view->render('gyik/tpl_new_gyik');
+        $view = new View();
+        $view->add_links(array('validation', 'ckeditor', 'vframework'));
+        $view->add_link('js', ADMIN_JS . 'pages/new_gyik.js');
+        $view->render('gyik/tpl_new_gyik', $data);
     }
 
     /**
@@ -119,41 +124,61 @@ class Gyik extends Controller {
     }
 
     /**
-     * 	Termék módosítása
-     *
+     * 	UPDATE
      */
-    public function update_gyik() {
-        if (!empty($_POST)) {
-            $result = $this->gyik_model->update_gyik($this->registry->params['id']);
+    public function update_gyik($id)
+    {
+        $id = (int)$id;
 
-            if ($result) {
-                Util::redirect('gyik');
+        if ($this->request->is_post()) {
+
+            $data['gyik_title'] = $this->request->get_post('gyik_title');
+            $data['gyik_description'] = $this->request->get_post('gyik_description');
+            $data['gyik_category_id'] = $this->request->get_post('gyik_category_id', 'integer');
+            $data['gyik_status'] = $this->request->get_post('gyik_status', 'integer');
+            // módosítás dátuma timestamp formátumban
+            $data['gyik_update_timestamp'] = time();
+
+
+            $error_counter = 0;
+            //megnevezés ellenőrzése    
+            if (empty($data['gyik_title'])) {
+                $error_counter++;
+                Message::set('error', 'A termék magyar megnevezése nem lehet üres!');
+            }
+            if (empty($data['gyik_category_id'])) {
+                $error_counter++;
+                Message::set('error', 'Választani kell egy kategóriát!');
+            }
+
+            if ($error_counter != 0) {
+                $this->response->redirect('admin/gyik/update_gyik/' . $id);
+            }
+
+            // új adatok az adatbázisba
+            $result = $this->gyik_model->update($id, $data);
+
+            if ($result !== false) {
+                Message::set('success', 'Gyik adatai sikeresen módosítva.');
+                $this->response->redirect('admin/gyik');
             } else {
-                Util::redirect('gyik/update_gyik/' . $this->registry->params['id']);
+                Message::set('error', 'Adatbázis lekérdezési hiba!');
+                $this->response->redirect('admin/gyik/update_gyik/' . $id);
             }
         }
 
-        // HTML oldal megjelenítése
-        // adatok bevitele a view objektumba
-        $this->view->title = 'Termék módosítása oldal';
-        $this->view->description = 'Termék módosítása description';
-        // js linkek generálása
-                //form validator	
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/jquery.validate.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/additional-methods.min.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/jquery-validation/localization/messages_hu.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_ASSETS, 'plugins/ckeditor/ckeditor.js');
-        $this->view->js_link[] = $this->make_link('js', ADMIN_JS, 'pages/edit_gyik.js');
+        $data['title'] = 'Termék módosítása oldal';
+        $data['description'] = 'Termék módosítása description';
+        $data['actual_gyik'] = $this->gyik_model->one_gyik_query($id);
+        $data['gyik_category_list'] = $this->gyik_model->category_list_query();
 
-        // a módosítandó termék adatai
-        $this->view->actual_gyik = $this->gyik_model->one_gyik_query($this->registry->params['id']);
-
-        $this->view->gyik_category_list = $this->gyik_model->category_list_query();
-
-        $this->view->render('gyik/tpl_gyik_update');
+        $view = new View();
+        $view->add_links(array('validation', 'ckeditor', 'vframework'));
+        $view->add_link('js', ADMIN_JS . 'pages/edit_gyik.js');
+        $view->render('gyik/tpl_gyik_update', $data);
     }
 
-/**
+    /**
      * 	Munka kategóriák megjelenítése
      */
     public function category() {
