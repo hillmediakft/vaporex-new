@@ -38,7 +38,7 @@ use System\Libs\Config;
                 <div class="portlet-title">
                     <div class="caption"><i class="fa fa-cogs"></i>Referenciák részletek</div>
                         <div class="actions">
-                            <a href="admin/refrences/update_project/<?php echo $content[0]['project_id'];?>" class="btn green btn-sm"><i class="fa fa-pencil"></i> Referencia szerkesztése</a>
+                            <a href="admin/projects/update_project/<?php echo $content[0]['project_id'];?>" class="btn green btn-sm"><i class="fa fa-pencil"></i> Referencia szerkesztése</a>
                             <a href="admin/projects" class="btn default btn-sm"><i class="fa fa-close"></i> Vissza a referenciák listájához</a>
                             <!-- <button class="btn default btn-sm" name="cancel" type="button">Mégsem</button>-->
                         </div> 

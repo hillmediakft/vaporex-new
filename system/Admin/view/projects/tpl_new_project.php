@@ -43,7 +43,8 @@
                     </div>
                     <div class="portlet-body">
 
-                        <div class="space10"></div>							
+                        <div class="margin-bottom-10"></div>
+
                         <div class="row">	
                             <div class="col-md-12">
 
@@ -65,7 +66,7 @@
                                     </ul>
                                     <div class="tab-content"> 
                                         
-                                                                            <!-- ÜZENET DOBOZOK -->
+                                <!-- ÜZENET DOBOZOK -->
                                 <div class="alert alert-danger display-hide">
                                     <button class="close" data-close="alert"></button>
                                     <span><!-- ide jön az üzenet--></span>
