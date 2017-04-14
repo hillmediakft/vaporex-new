@@ -37,6 +37,22 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+#project_image {
+    position:relative; /* or fixed or absolute */
+    border: 1px solid #ccc;
+    background-image: url();
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#project_category_image {
+    position:relative; /* or fixed or absolute */
+    border: 1px solid #ccc;
+    background-image: url();
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 #croppic{
     width: 400px;  /* MANDATORY */
     height: 208px; /* MANDATORY */
