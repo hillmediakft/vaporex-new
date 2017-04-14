@@ -89,29 +89,29 @@ $config['productphoto'] = array(
     'default_photo' => 'default.jpg'
 );
 
-$config['rendezvenyphoto'] = array(
-    'width' => 400,
-    'height' => 300,
-    'thumb_width' => 80,
-    'upload_path' => UPLOADS . 'rendezveny_photo/',
-    'default_photo' => 'default.jpg'
-);
+        $config['rendezvenyphoto'] = array(
+            'width' => 400,
+            'height' => 300,
+            'thumb_width' => 80,
+            'upload_path' => UPLOADS . 'rendezveny_photo/',
+            'default_photo' => 'default.jpg'
+        );
 
-$config['szolgaltatasphoto'] = array(
-    'width' => 800,
-    'height' => 600,
-    'thumb_width' => 400,
-    'upload_path' => UPLOADS . 'szolgaltatas_photo/',
-    'default_photo' => 'default.jpg'
-);
+        $config['szolgaltatasphoto'] = array(
+            'width' => 800,
+            'height' => 600,
+            'thumb_width' => 400,
+            'upload_path' => UPLOADS . 'szolgaltatas_photo/',
+            'default_photo' => 'default.jpg'
+        );
 
-$config['szolgaltatascategoryphoto'] = array(
-    'width' => 400,
-    'height' => 300,
-    'thumb_width' => 80,
-    'upload_path' => UPLOADS . 'szolgaltatas_category_photo/',
-    'default_photo' => 'default.jpg'
-);
+        $config['szolgaltatascategoryphoto'] = array(
+            'width' => 400,
+            'height' => 300,
+            'thumb_width' => 80,
+            'upload_path' => UPLOADS . 'szolgaltatas_category_photo/',
+            'default_photo' => 'default.jpg'
+        );
 
 $config['user'] = array(
     'width' => 600,
@@ -133,6 +133,7 @@ $config['projectphoto'] = array(
     'width' => 800,
     'height' => 600,
     'thumb_width' => 400,
+    'thumb_height' => 300,
     'upload_path' => UPLOADS . 'project_photo/',
     'default_photo' => 'default.jpg'
 );
@@ -141,6 +142,7 @@ $config['projectcategoryphoto'] = array(
     'width' => 800,
     'height' => 600,
     'thumb_width' => 400,
+    'thumb_height' => 300,
     'upload_path' => UPLOADS . 'project_category_photo/',
     'default_photo' => 'default.jpg'
 );
