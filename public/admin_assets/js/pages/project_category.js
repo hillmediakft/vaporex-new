@@ -1,144 +1,67 @@
-/**
- Referenciák oldal
- **/
 var projectCategory = function () {
 
     var projectsCategoryTable = function () {
 
         var table = $('#projects_category');
-        // begin first table
 
 
         table.dataTable({
-            // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+
             "language": {
-                "aria": {
-                    "sortAscending": ": activate to sort column ascending",
-                    "sortDescending": ": activate to sort column descending"
+                // metronic specific
+                    //"metronicGroupActions": "_TOTAL_ sor kiválasztva: ",
+                    //"metronicAjaxRequestGeneralError": "A kérés nem hajtható végre, ellenőrizze az internet kapcsolatot!",
+
+                // data tables specific                
+                "decimal":        "",
+                "emptyTable":     "Nincs megjeleníthető adat!",
+                "info":           "_START_ - _END_ elem &nbsp; _TOTAL_ elemből",
+                "infoEmpty":      "Nincs megjeleníthető adat!",
+                "infoFiltered":   "(Szűrve _MAX_ elemből)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     " _MENU_ elem/oldal",
+                "loadingRecords": "Betöltés...",
+                "processing":     "Feldolgozás...",
+                "search":         "Keresés:",
+                "zeroRecords":    "Nincs egyező elem",
+                "paginate": {
+                    "previous":   "Előző",
+                    "next":       "Következő",
+                    "last":       "Utolsó",
+                    "first":      "Első",
+                    "pageOf":     "&nbsp;/&nbsp;"
                 },
-                "emptyTable": "No data available in table",
-                "info": "_START_ - _END_ elem _TOTAL_ elemből",
-                "infoEmpty": "Nincs megjeleníthető adat!",
-                "infoFiltered": "(Szűrve _MAX_ elemből)",
-                "lengthMenu": "Show _MENU_ entries",
-                "search": "Search:",
-                "zeroRecords": "Nincs egyező elem"
+                "aria": {
+                    "sortAscending":  ": aktiválja a növekvő rendezéshez",
+                    "sortDescending": ": aktiválja a csökkenő rendezéshez"
+                }
             },
-            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js). 
-            // So when dropdowns used the scrollable div should be removed. 
-            // "dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+
 
        //     "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 
-            "columns": [{
-                    "orderable": true
-                }, {
-                    "orderable": true
-                }, {
-                    "orderable": false
-                }],
+            // set default column settings
+            "columnDefs": [
+                {"orderable": true, "searchable": true, "targets": 0},
+                {"orderable": true, "searchable": true, "targets": 1},
+                {"orderable": false, "searchable": false, "targets": 2}
+            ],
+
+
             "lengthMenu": [
                 [5, 15, 20, -1],
                 [5, 15, 20, "Összes"] // change per page values here
             ],
             // set the initial value
             "pageLength": 15,
+
             "pagingType": "bootstrap_full_number",
-            "language": {
-                "search": "Keresés: ",
-                "lengthMenu": "  _MENU_ elem/oldal",
-                "paginate": {
-                    "previous": "Előző",
-                    "next": "Következő",
-                    "last": "Utolsó",
-                    "first": "Első"
-                }
-            },
-            "columnDefs": [{// set default column settings
-                    'orderable': false,
-                    'targets': [0]
-                }, {
-                    "searchable": false,
-                    "targets": [0]
-                }],
+
             "order": [
                 [0, "asc"]
             ] // set column as a default sort by asc
 
-
-        });
-
-        var tableWrapper = jQuery('#projects_category_wrapper');
-
-        table.find('.group-checkable').change(function () {
-            var set = jQuery(this).attr("data-set");
-            var checked = jQuery(this).is(":checked");
-            jQuery(set).each(function () {
-                if (checked) {
-                    $(this).attr("checked", true);
-                    $(this).parents('tr').addClass("active");
-                } else {
-                    $(this).attr("checked", false);
-                    $(this).parents('tr').removeClass("active");
-                }
-            });
-            jQuery.uniform.update(set);
-        });
-
-        table.on('change', 'tbody tr .checkboxes', function () {
-            $(this).parents('tr').toggleClass("active");
-        });
-
-        tableWrapper.find('.dataTables_length select').addClass("form-control input-sm input-inline"); // modify table per page dropdown
-    }
-
-
-    var enableDisableButtons = function () {
-
-        var checkAll = $('input.group-checkable');
-        var checkboxes = $('input.checkboxes');
-
-        checkboxes.change(function () {
-            $(this).closest("tr").find('.btn-group a').attr('disabled', $(this).is(':checked'));
-        });
-        checkAll.change(function () {
-            checkboxes.closest("tr").find('.btn-group a').attr('disabled', $(this).is(':checked'));
-        });
-    }
-
-    var hideAlert = function () {
-        $('div.alert').delay(2500).slideUp(750);
-    }
-
-    var printTable = function () {
-        $('#print_projects_category').on('click', function (e) {
-            e.preventDefault();
-            var divToPrint = document.getElementById("projects");
-            console.log(divToPrint);
-//		divToPrint = $('#users tr').find('th:last, td:last').remove();
-            newWin = window.open("");
-            newWin.document.write(divToPrint.outerHTML);
-            newWin.print();
-            newWin.close();
-        })
-
-    }
-
-    var deleteOneCategoryConfirm = function () {
-        $('[id*=delete_category]').on('click', function (e) {
-            e.preventDefault();
-            var deleteLink = $(this).attr('href');
-            //var employerName = $(this).closest("tr").find('td:nth-child(3)').text();
-
-            bootbox.setDefaults({
-                locale: "hu",
-            });
-            bootbox.confirm("Biztosan törölni akarja a kategóriát?", function (result) {
-                if (result) {
-                    window.location.href = deleteLink;
-                }
-            });
         });
 
     }
@@ -151,11 +74,13 @@ var projectCategory = function () {
             }
 
             projectsCategoryTable();
-            enableDisableButtons();
-            hideAlert();
-            printTable();
-            deleteOneCategoryConfirm();
 
+            vframework.deleteItems({
+                table_id: "projects_category",
+                url: "admin/projects/category_delete"
+            });
+
+            vframework.hideAlert();
         }
 
     };
@@ -163,9 +88,5 @@ var projectCategory = function () {
 }();
 
 $(document).ready(function () {
-    Metronic.init(); // init metronic core componets
-    Layout.init(); // init layout
-    QuickSidebar.init(); // init quick sidebar
-    Demo.init(); // init demo features 
     projectCategory.init(); // init projects category page
 });

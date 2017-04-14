@@ -72,8 +72,8 @@ var NewProject = function () {
 
 
     var cropReferencePhoto = function () {
-        var userPhoto = $('#project_image');
-        userPhoto.css("width", '602px').css("height", '452px');
+        var projectPhoto = $('#project_image');
+        projectPhoto.css("width", '602px').css("height", '452px');
         var cropperOptions = {
             //kérés a user_img_upload metódusnak "upload" paraméterrel
             uploadUrl: 'admin/projects/project_crop_img_upload/upload',

@@ -70,15 +70,9 @@ var EditProject = function () {
         });
     }
 
-
-
-    var hideAlert = function () {
-        //      $('div.alert').delay(2500).slideUp(750);
-    }
-
     var cropReferencePhoto = function () {
-        var userPhoto = $('#project_image');
-        userPhoto.css("width", '602px').css("height", '452px');
+        var referencePhoto = $('#project_image');
+        referencePhoto.css("width", '602px').css("height", '452px');
         var cropperOptions = {
             //kérés a user_img_upload metódusnak "upload" paraméterrel
             uploadUrl: 'admin/projects/project_crop_img_upload/upload',
@@ -107,21 +101,16 @@ var EditProject = function () {
         //main function to initiate the module
         init: function () {
             handleValidation();
-            hideAlert();
             cropReferencePhoto();
             ckeditorInit();
             showOldImage();
+            vframework.hideAlert();
         }
     };
 
 
 }();
 
-
 jQuery(document).ready(function () {
-    Metronic.init(); // init metronic core componets
-    Layout.init(); // init layout
-    QuickSidebar.init(); // init quick sidebar
-    Demo.init(); // init demo features	
     EditProject.init();
 });
