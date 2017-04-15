@@ -19,9 +19,8 @@ class GyikCategory_model extends AdminModel {
      * 	@param	integer	$id  (ha csak egy elemet akarunk lekérdezni)
      * 	@return	array	
      */
-    public function selectOneCategory($id)
+    public function oneCategory($id)
     {
-        $id = (int)$id;    
         $this->query->set_where('gyik_category_id', '=', $id);
         return $this->query->select();
     }
@@ -29,9 +28,9 @@ class GyikCategory_model extends AdminModel {
     /**
      * 	Lekérdezi a kategóriák nevét és id-jét 
      */
-    public function selectAllCategory()
+    public function allCategory()
     {
-        $result = $this->query->select();
+        return $this->query->select();
     }
 
     /**

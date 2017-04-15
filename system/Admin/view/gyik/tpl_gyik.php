@@ -35,15 +35,14 @@ use System\Libs\Auth;
             <!-- echo out the system feedback (error and success messages) -->
             <?php $this->renderFeedbackMessages(); ?>				
 
-            <form class="horizontal-form" id="del_gyik_form" method="POST" action="admin/gyik/delete_gyik">	
+            <form class="horizontal-form" id="gyik_form" method="POST" action="">	
 
                 <div class="portlet">
                     <div class="portlet-title">
                         <div class="caption"><i class="fa fa-shopping-cart"></i>Gyakori kérdések listája</div>
                         <div class="actions">
-                            <a href="admin/gyik/new_gyik" class="btn blue btn-sm"><i class="fa fa-plus"></i> Új referencia</a>
-                            <button class="btn red btn-sm" name="delete_gyik_submit" value="submit" type="submit"><i class="fa fa-trash"></i> Csoportos törlés</button>
-
+                            <a href="admin/gyik/insert" class="btn blue btn-sm"><i class="fa fa-plus"></i> Új gyik</a>
+                            <button class="btn red btn-sm" id="delete_group" type="button"><i class="fa fa-trash"></i> Csoportos törlés</button>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -96,7 +95,7 @@ use System\Libs\Auth;
                                                         <!-- <li><a href="javascript:void(0)" class="modal_trigger" rel="<?php //echo $value['gyik_id'];  ?>"><i class="fa fa-eye"></i> Részletek</a></li>	-->	
 
                                                         <?php if (Auth::hasAccess('gyik.update')) { ?>	
-                                                            <li><a href="<?php echo $this->request->get_uri('site_url') . 'gyik/update_gyik/' . $value['gyik_id']; ?>"><i class="fa fa-pencil"></i> Szerkeszt</a></li>
+                                                            <li><a href="<?php echo $this->request->get_uri('site_url') . 'gyik/update/' . $value['gyik_id']; ?>"><i class="fa fa-pencil"></i> Szerkeszt</a></li>
                                                         <?php }; ?>
 
                                                         <?php if (Auth::hasAccess('gyik.delete')) { ?>	
