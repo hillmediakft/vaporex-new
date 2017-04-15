@@ -134,8 +134,8 @@ use System\Libs\Auth;
                         <span class="title">GYIK listája</span>
                     </a>
                 </li>
-                <li class=" nav-item <?php $this->menu_active('gyik', 'new_gyik'); ?>">
-                    <a href="admin/gyik/new_gyik" class="nav-link">
+                <li class=" nav-item <?php $this->menu_active('gyik', 'insert'); ?>">
+                    <a href="admin/gyik/insert" class="nav-link">
                         <span class="title">Új kérdés hozzáadása</span>
                     </a>
                 </li>
