@@ -172,9 +172,15 @@ class Application {
             // GYIK
                 $router->get('/gyik', 'gyik@index');
                 $router->get('/gyik/view_gyik/:id', 'gyik@view_gyik');
-                $router->get('/gyik/new_gyik', 'gyik@new_gyik');
+                $router->match('GET|POST', '/gyik/insert', 'gyik@insert');
+                $router->match('GET|POST', '/gyik/update/:id', 'gyik@update/:id');
+                $router->post('/gyik/delete', 'gyik@delete'); // AJAX
+                $router->post('/gyik/change_status', 'gyik@change_status'); // AJAX
+                // gyik kategória
                 $router->get('/gyik/category', 'gyik@category');
-                $router->get('/gyik/category_insert', 'gyik@category_insert');
+                $router->match('GET|POST', '/gyik/category_insert', 'gyik@category_insert');
+                $router->match('GET|POST', '/gyik/category_update/:id', 'gyik@category_update');
+                $router->post('/gyik/category_delete', 'gyik@category_delete'); //AJAX
 
             // user	
                 $router->get('/user', 'user@index');
