@@ -70,8 +70,8 @@ use System\Libs\Auth;
                         <span class="title">Termékek listája</span>
                     </a>
                 </li>
-                <li class="nav-item <?php $this->menu_active('products', 'new_product'); ?>">
-                    <a href="admin/products/new_product" class="nav-link">
+                <li class="nav-item <?php $this->menu_active('products', 'insert'); ?>">
+                    <a href="admin/products/insert" class="nav-link">
                         <span class="title">Új termék hozzáadása</span>
                     </a>
                 </li>
