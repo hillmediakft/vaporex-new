@@ -137,9 +137,9 @@ class Application {
 
             // termékek
                 $router->get('/products', 'products@index');
-                $router->get('/products/view_product/:id', 'products@view_product');
-                $router->match('GET|POST', '/products/new_product', 'products@new_product');
-                $router->match('GET|POST', '/products/update_product/:id', 'products@update_product');
+                $router->get('/products/view/:id', 'products@view');
+                $router->match('GET|POST', '/products/insert', 'products@insert');
+                $router->match('GET|POST', '/products/update/:id', 'products@update');
                 $router->post('/products/delete', 'products@delete');
                 $router->post('/products/change_status', 'products@change_status');
                 // termék kategória
