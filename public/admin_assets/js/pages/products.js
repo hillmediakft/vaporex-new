@@ -108,7 +108,7 @@ var Products = function () {
             $.ajax({
                 type: "POST",
                 data: {id: id},
-                url: "admin/products/view_product_ajax",
+                url: "admin/products/view_ajax",
                 dataType: "json",
                 beforeSend: function () {
                     App.blockUI({
@@ -183,7 +183,7 @@ var Products = function () {
                                 label: "Adatok módosítása",
                                 className: "btn-success",
                                 callback: function () {
-                                    window.location.href = 'admin/products/update_product/' + data.product_id;
+                                    window.location.href = 'admin/products/update/' + data.product_id;
                                 }
                             },
                             cancel: {
