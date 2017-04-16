@@ -148,23 +148,6 @@ class Product_categories_model extends AdminModel {
     }
 
     /**
-     * 	Minden termék kategória tömbhöz hozzáilleszti a kategória elérési útvonalát
-     * 
-     * 	@return	array a kategóriák + path tömbben	
-     */
-    public function product_categories_with_path($categories_arr)
-    {
-        // a termékek root kategória eltávolítása a tömbből 
-        array_shift($categories_arr);
-
-        foreach ($categories_arr as $key => $value) {
-            $categories_arr[$key]['category_path'] = $this->product_category_path($value['cat_id']);
-        }
-
-        return $categories_arr;
-    }
-
-    /**
      * Egy kategória alá tartozó alkategóriák lekérdezése  
      *
      * @param integer $id

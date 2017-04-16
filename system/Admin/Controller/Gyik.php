@@ -3,6 +3,7 @@ namespace System\Admin\Controller;
 use System\Core\AdminController;
 use System\Core\View;
 use System\Libs\Auth;
+use System\Libs\Message;
 
 class Gyik extends AdminController {
 
@@ -95,7 +96,7 @@ class Gyik extends AdminController {
             $result = $this->gyik_model->insert($data);
 
             if ($result !== false) {
-                Message::set('success', 'Referencia sikeresen hozzáadva.');
+                Message::set('success', 'Kérdés sikeresen hozzáadva.');
                 $this->response->redirect('admin/gyik');
             } else {
                 Message::set('error', 'Adatbázis lekérdezési hiba!');
@@ -103,8 +104,8 @@ class Gyik extends AdminController {
             }
         }
 
-        $data['title'] = 'Új refrencia oldal';
-        $data['description'] = 'Új refrencia description';
+        $data['title'] = 'Új gyik oldal';
+        $data['description'] = 'Új gyik description';
         $data['gyik_category_list'] = $this->gyikCategory_model->allCategory();
 
         $view = new View();
@@ -357,8 +358,8 @@ class Gyik extends AdminController {
             }
         }
 
-        $data['title'] = 'Újreferencia kategória hozzáadása oldal';
-        $data['description'] = 'Új referencia kategória description';
+        $data['title'] = 'Új gyik kategória hozzáadása oldal';
+        $data['description'] = 'Új gyik kategória description';
         
         $data['gyik_category_list'] = $this->gyikCategory_model->allCategory();
 
