@@ -36,7 +36,7 @@
                 <div class="portlet-title">
                     <div class="caption"><i class="fa fa-cogs"></i>Termék részletek</div>
                         <div class="actions">
-                            <a href="admin/products/update_product/<?php echo $content['product_id'];?>" class="btn green btn-sm"><i class="fa fa-pencil"></i> Termék szerkesztése</a>
+                            <a href="admin/products/update/<?php echo $content['product_id'];?>" class="btn green btn-sm"><i class="fa fa-pencil"></i> Termék szerkesztése</a>
                             <a href="admin/products" class="btn default btn-sm"><i class="fa fa-close"></i> Vissza a termékek listájához</a>
                             <!-- <button class="btn default btn-sm" name="cancel" type="button">Mégsem</button>-->
                         </div> 

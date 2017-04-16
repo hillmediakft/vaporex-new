@@ -46,6 +46,6 @@
 	</dl>	
 </div>	 
 <div class="modal-footer">
-	<button onclick="window.location.href = 'admin/products/update_product/<?php echo $content['product_id'];?>';" type="button" class="btn blue">Adatok módosítása</button>
+	<button onclick="window.location.href = 'admin/products/update/<?php echo $content['product_id'];?>';" type="button" class="btn blue">Adatok módosítása</button>
 	<button type="button" class="btn default" data-dismiss="modal">Bezár</button>
 </div>

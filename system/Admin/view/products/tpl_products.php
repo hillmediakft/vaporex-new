@@ -43,7 +43,7 @@ use System\Libs\Auth;
                         <div class="portlet-title">
                             <div class="caption"><i class="fa fa-shopping-cart"></i>Termékek listája</div>
                             <div class="actions">
-                                <a href="admin/products/new_product" class="btn blue btn-sm"><i class="fa fa-plus"></i> Új termék</a>
+                                <a href="admin/products/insert" class="btn blue btn-sm"><i class="fa fa-plus"></i> Új termék</a>
                                 <button class="btn red btn-sm" id="delete_group" type="button"><i class="fa fa-trash"></i> Csoportos törlés</button>
                             </div>
                         </div>
@@ -100,11 +100,11 @@ use System\Libs\Auth;
                                                             <i class="fa fa-cogs"></i> 
                                                         </a>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="<?php echo $this->request->get_uri('site_url') . 'products/view_product/' . $value['product_id']; ?>"><i class="fa fa-eye"></i> Részletek</a></li>
+                                                            <li><a href="<?php echo $this->request->get_uri('site_url') . 'products/view/' . $value['product_id']; ?>"><i class="fa fa-eye"></i> Részletek</a></li>
                                                             <!-- <li><a href="javascript:void(0)" class="modal_trigger" rel="<?php //echo $value['product_id'];   ?>"><i class="fa fa-eye"></i> Részletek</a></li>	-->	
 
                                                             <?php if (Auth::hasAccess('products.update')) { ?>  
-                                                                <li><a href="admin/products/update_product/<?php echo $value['product_id'];?>"><i class="fa fa-pencil"></i> Szerkeszt</a></li>
+                                                                <li><a href="admin/products/update/<?php echo $value['product_id'];?>"><i class="fa fa-pencil"></i> Szerkeszt</a></li>
                                                             <?php } ?>
 
                                                             <?php if (Auth::hasAccess('products.delete')) { ?>
