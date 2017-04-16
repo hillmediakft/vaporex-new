@@ -1,4 +1,4 @@
-var EditProductCategory = function () {
+var ProductCategoryUpdate = function () {
 
     var cropProductCategoryPhoto = function () {
         var userPhoto = $('#product_category_image');
@@ -35,5 +35,5 @@ var EditProductCategory = function () {
 }();
 
 jQuery(document).ready(function () {
-    EditProductCategory.init();
+    ProductCategoryUpdate.init();
 });

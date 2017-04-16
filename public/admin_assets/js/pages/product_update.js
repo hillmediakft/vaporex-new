@@ -1,4 +1,4 @@
-var EditProduct = function () {
+var ProductUpdate = function () {
 
     var cropProductPhoto = function () {
         var userPhoto = $('#product_image');
@@ -40,5 +40,5 @@ var EditProduct = function () {
 }();
 
 jQuery(document).ready(function () {
-    EditProduct.init();
+    ProductUpdate.init();
 });
