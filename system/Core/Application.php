@@ -173,7 +173,7 @@ class Application {
                 $router->get('/gyik', 'gyik@index');
                 $router->get('/gyik/view_gyik/:id', 'gyik@view_gyik');
                 $router->match('GET|POST', '/gyik/insert', 'gyik@insert');
-                $router->match('GET|POST', '/gyik/update/:id', 'gyik@update/:id');
+                $router->match('GET|POST', '/gyik/update/:id', 'gyik@update');
                 $router->post('/gyik/delete', 'gyik@delete'); // AJAX
                 $router->post('/gyik/change_status', 'gyik@change_status'); // AJAX
                 // gyik kategória
