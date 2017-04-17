@@ -165,7 +165,7 @@ class Gyik extends AdminController {
 
         $view = new View();
         $view->add_links(array('validation', 'ckeditor', 'vframework'));
-        $view->add_link('js', ADMIN_JS . 'pages/edit_gyik.js');
+        $view->add_link('js', ADMIN_JS . 'pages/gyik_update.js');
         $view->render('gyik/tpl_gyik_update', $data);
     }
 
