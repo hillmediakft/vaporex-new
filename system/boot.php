@@ -37,7 +37,7 @@ if (isset($_SERVER['SERVER_ADDR']) && ($_SERVER['SERVER_ADDR'] == '127.0.0.1' ||
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
 
-    define('BASE_URL', 'http://vaporex_new/'); //Az oldal elérési útjának beállítása
+    define('BASE_URL', 'http://vaporex-new/'); //Az oldal elérési útjának beállítása
     define('BASE_PATH', ''); //A domainnév utáni elérési út beállítása
     define('ENV', 'development'); //fejlesztői környezet
     //db adatok
@@ -53,7 +53,7 @@ if (isset($_SERVER['SERVER_ADDR']) && ($_SERVER['SERVER_ADDR'] == '127.0.0.1' ||
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
 
-    define('BASE_URL', 'http://vaporex_new.onlinemarketingguru.hu/'); //Az oldal elérési útjának beállítása
+    define('BASE_URL', 'http://vaporex-new.onlinemarketingguru.hu/'); //Az oldal elérési útjának beállítása
     define('BASE_PATH', ''); //A domainnév utáni elérési út beállítása
     define('ENV', 'production'); //online éles környezet
     //db adatok	
