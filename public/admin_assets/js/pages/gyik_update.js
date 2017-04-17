@@ -1,4 +1,4 @@
-var EditGyik = function () {
+var GyikUpdate = function () {
 
     /**
      *	Form validátor
@@ -58,7 +58,7 @@ var EditGyik = function () {
                 //console.log('submitHandler');
                 error1.hide();
                 //success1.show();
-                Metronic.blockUI({
+                App.blockUI({
                     boxed: true,
                     message: 'Feldolgozás...'
                 });
@@ -96,9 +96,5 @@ var EditGyik = function () {
 
 
 jQuery(document).ready(function () {
-    Metronic.init(); // init metronic core componets
-    Layout.init(); // init layout
-    QuickSidebar.init(); // init quick sidebar
-    Demo.init(); // init demo features	
-    EditGyik.init();
+    GyikUpdate.init();
 });
