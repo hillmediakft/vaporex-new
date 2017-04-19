@@ -57,7 +57,8 @@ class Product_categories_model extends AdminModel {
     public function oneCategory($id)
     {
         $this->query->set_where('product_category_id', '=', $id);
-        return $this->query->select();
+        $result = $this->query->select();
+        return $result[0];
     }
 
     /**
@@ -91,36 +92,13 @@ class Product_categories_model extends AdminModel {
         return $this->query->select();
     }
 
-
-    /**
-     *  Lekérdezi a termék kategóriákat a products_categories táblából (és az id-ket)
-     *  @return array   
-     */
-    public function productCategories_2()
-    {
-        $this->query->set_table('product_categories a');
-        $this->query->set_columns(
-            'a.product_category_id AS cat_id,
-            a.product_category_name AS cat_name,
-            b.product_category_id AS parent_id,
-            b.product_category_name AS parent_name,
-            a.product_category_photo'
-            );
-
-        $this->query->set_join('left', 'product_categories b', 'a.product_category_parent = b.product_category_id');
-        $this->query->set_where('a.product_category_id', '!=', 1);
-        return $this->query->select();
-    }
-
     /**
      * 	Lekérdezi a termék kategóriákat, a szülőv dataival a products_categories táblából 
      * 
      * 	@return	array a kategóriák tömbben	
      */
-    public function product_category_path($category_id)
+    public function categoriesLevels($category_id)
     {
-        $path = '';
-
         $this->query->set_table('product_categories AS t1');
         $this->query->set_columns(
             't1.product_category_name AS lev1,
@@ -128,24 +106,13 @@ class Product_categories_model extends AdminModel {
             t3.product_category_name as lev3,
             t4.product_category_name as lev4'
         );
-
         $this->query->set_join('left', 'product_categories AS t2', 't1.product_category_parent = t2.product_category_id');
         $this->query->set_join('left', 'product_categories AS t3', 't2.product_category_parent = t3.product_category_id');
         $this->query->set_join('left', 'product_categories AS t4', 't3.product_category_parent = t4.product_category_id');
-
         $this->query->set_where('t1.product_category_id', '=', $category_id);
-
         $result = $this->query->select();
-
-        foreach (array_reverse($result[0]) as $key => $value) {
-            if ($value !== null) {
-                $path .= $value . ' &raquo; ';
-            }
-        }
-        $path = ltrim($path, 'termékek &raquo; ');
-        $path = rtrim($path, ' &raquo; ');
-        return $path;
-    }
+        return $result[0];
+  }
 
     /**
      * Egy kategória alá tartozó alkategóriák lekérdezése  
