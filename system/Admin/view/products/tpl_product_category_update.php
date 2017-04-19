@@ -84,7 +84,7 @@ use System\Libs\Config;
                                 <div class="form-group">
                                     <label class="control-label">Kategória kép</label>
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="<?php //echo Config::get('categoryphoto.upload_path') . $category_content[0]['product_category_photo']; ?>" alt=""/></div>
+                                        <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;"><img src="<?php //echo Config::get('categoryphoto.upload_path') . $category_content['product_category_photo']; ?>" alt=""/></div>
                                         <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
                                         <div>
                                             <span class="btn default btn-file"><span class="fileupload-new">Kiválasztás</span><span class="fileupload-exists">Módosít</span><input id="uploadprofile" class="img" type="file" name="upload_product_category_photo"></span>
@@ -106,28 +106,40 @@ use System\Libs\Config;
 
                                 <div class="form-group">
                                     <label for="product_category_name" class="control-label">Kategória neve <span class="required">*</span></label>
-                                    <input type="text" name="product_category_name" id="product_category_name" value="<?php echo $category_content[0]['product_category_name'] ?>" class="form-control input-xlarge" />
+                                    <input type="text" name="product_category_name" id="product_category_name" value="<?php echo $category_content['product_category_name'] ?>" class="form-control input-xlarge" />
                                 </div>
                                 
 
                                 <div class="form-group">
                                     <label for="product_category_parent_id" class="control-label">Szülő kategória </label>
                                     <select name="product_category_parent_id" class="form-control input-xlarge">
-                                        <option value="1">Termékek</option>
-                                        <?php foreach ($product_category_list_with_path as $value) { ?>
-                                            <option value="<?php echo $value['cat_id']; ?>">
-                                                <?php
-                                                echo $value['category_path'];
-                                                ?>
-                                            </option>
-                                            <?php } ?>
+                                        <option value="0">Termékek</option>
+                                        <?php
+                                            foreach ($product_category_list_with_path as $value) {
+                                                // az a kategória, amelyiket módosítani akarjuk az ne jelenjen meg a listában
+                                                if ($category_content['product_category_id'] == $value['cat_id']) {
+                                                    continue;
+                                                }
+                                                // ha a kategória tartalmaz terméket ne jelenjen meg
+                                                if ($value['products_number'] > 0) {
+                                                    continue;
+                                                }                                                
+                                                // 4 szintet tartalmazó kategória ne jelenjen meg
+                                                if ($value['level'] == 4) {
+                                                    continue;
+                                                }
+                                        ?>
+                                        <option value="<?php echo $value['cat_id']; ?>" <?php echo ($category_content['product_category_parent'] == $value['cat_id']) ? 'selected' : ''; ?>>
+                                            <?php echo $value['category_path']; ?>
+                                        </option>
+                                        <?php } ?>
                                     </select>
                                 </div>   
 
                                 <!-- régi kép neve-->
-                                <input type="hidden" name="old_img" id="old_img" value="<?php echo Config::get('categoryphoto.upload_path') . $category_content[0]['product_category_photo']; ?>">
+                                <input type="hidden" name="old_img" id="old_img" value="<?php echo Config::get('categoryphoto.upload_path') . $category_content['product_category_photo']; ?>">
                                 <!-- régi kategória neve-->
-                                <input type="hidden" name="old_category" id="old_category" value="<?php echo $category_content[0]['product_category_name']; ?>">
+                                <input type="hidden" name="old_category" id="old_category" value="<?php echo $category_content['product_category_name']; ?>">
 
                             </div>
                         </div>	

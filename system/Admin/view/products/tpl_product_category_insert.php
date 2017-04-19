@@ -106,7 +106,7 @@
 
                                 <div class="form-group">
                                     <label for="product_category_name" class="control-label">Kategória neve<span class="required">*</span></label>
-                                    <input type="text" name="product_category_name" id="product_category_name" class="form-control input-xlarge" />
+                                    <input type="text" name="product_category_name" id="product_category_name" class="form-control input-xlarge" required="" />
                                 </div>
                                 
                             
@@ -114,11 +114,20 @@
                                 <div class="form-group">
                                     <label for="product_category_parent_id" class="control-label">Szülő kategória </label>
                                     <select name="product_category_parent_id" class="form-control input-xlarge">
-                                        <option value="1">Termékek</option>
-                                        <?php foreach ($product_category_list_with_path as $value) { ?>
-                                            <option value="<?php echo $value['cat_id']; ?>">
-                                                <?php echo $value['category_path']; ?>
-                                            </option>
+                                        <option value="0">Termékek</option>
+                                        <?php foreach ($product_category_list_with_path as $value) { 
+                                            // ha a kategória tartalmaz terméket ne jelenjen meg
+                                            if ($value['products_number'] > 0) {
+                                                continue;
+                                            }
+                                            // 4 szintet tartalmazó kategória ne jelenjen meg
+                                            if ($value['level'] == 4) {
+                                                continue;
+                                            }
+                                        ?>
+                                        <option value="<?php echo $value['cat_id']; ?>">
+                                            <?php echo $value['category_path']; ?>
+                                        </option>
                                         <?php } ?>
                                     </select>
                                 </div>                                

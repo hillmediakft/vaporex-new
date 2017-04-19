@@ -106,6 +106,12 @@
                                     <select name="product_category_id" class="form-control input-xlarge">
                                         <option value="">Válasszon</option>
                                         <?php foreach ($product_category_list_with_path as $value) { ?>
+                                            <?php
+                                            // ha van alkategóriája ennek a ketagóriának, akkor nem jelenik meg
+                                            if ($value['children'] === true) {
+                                                continue;
+                                            }
+                                            ?>
                                             <option value="<?php echo $value['cat_id']; ?>" <?php echo ($actual_product['product_category_id'] == $value['cat_id']) ? 'selected' : ''; ?>>
                                                 <?php echo $value['category_path']; ?>
                                             </option>
