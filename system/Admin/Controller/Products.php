@@ -18,9 +18,11 @@ class Products extends AdminController {
 /*
 var_dump($this->products_model->product_number_in_category(33));
 var_dump($this->products_model->productCategoryCounter());
-var_dump($this->product_categories_model->productCategories());
 var_dump($this->product_categories_model->productCategories_2());
 var_dump($data['product_category_list'] = $this->product_categories_model->productCategories() );
+
+$list = $this->product_categories_model->productCategories();
+var_dump( $this->product_categories_with_path($list) );
 die;
 */
     }
@@ -343,9 +345,9 @@ die;
         // adatok bevitele a view objektumba
         $data['title'] = 'Termékek kategória oldal';
         $data['description'] = 'termékek kategória description';
-        $data['all_product_category'] = $this->product_categories_model->productCategories_2();
+        $data['all_product_category'] = $this->product_categories_model->productCategories();
         $data['category_counter'] = $this->products_model->productCategoryCounter();
-        $data['category_tree'] = $this->_get_category_tree_2();
+        $data['category_tree'] = $this->_get_category_tree();
 
 //var_dump($data);die;
 
@@ -364,11 +366,11 @@ die;
     public function category_insert()
     {
         if ($this->request->is_post()) {
- 
+
             //ha üresen küldték el a formot
             if (empty($this->request->get_post('product_category_name'))) {
                 Message::set('error', 'Meg kell adni a kategória nevét!');
-                $this->response->redirect('admin/category_insert');
+                $this->response->redirect('admin/products/category_insert');
             }
 
             $data['product_category_name'] = $this->request->get_post('product_category_name');
@@ -380,7 +382,7 @@ die;
                 $data['product_category_name'] = trim($data['product_category_name']);
                 if (strtolower($data['product_category_name']) == strtolower($value['product_category_name'])) {
                     Message::set('error', 'category_already_exists');
-                    $this->response->redirect('admin/category_insert');
+                    $this->response->redirect('admin/products/category_insert');
                 }
             }
 
@@ -497,7 +499,8 @@ die;
         $data['product_category_list'] = $this->product_categories_model->productCategories();
         $data['product_category_list_with_path'] = $this->product_categories_with_path($data['product_category_list']);
         $data['category_content'] = $this->product_categories_model->oneCategory($id);
-
+//var_dump($data['category_content']);
+//var_dump($data['product_category_list_with_path']);
         $view = new View();
         $view->add_links(array('bootstrap-fileupload', 'croppic', 'ckeditor', 'vframework'));
         $view->add_link('js', ADMIN_JS . 'pages/product_category_update.js');
@@ -828,88 +831,81 @@ die;
      */
     public function product_categories_with_path($categories_arr)
     {
-        // a termékek root kategória eltávolítása a tömbből 
-        array_shift($categories_arr);
-
         foreach ($categories_arr as $key => $value) {
-            $categories_arr[$key]['category_path'] = $this->product_categories_model->product_category_path($value['cat_id']);
+
+            // termékek száma
+            $categories_arr[$key]['products_number'] = $this->products_model->product_number_in_category($value['cat_id']);
+
+            // lekérdezzük a kategória szinteket a kategóriánál
+            $levels = $this->product_categories_model->categoriesLevels($value['cat_id']);
+//var_dump($levels);
+
+            // létrehozzuk a 'kenyérmorzsa' stringet        
+            $path = '';
+            // szintek számát fogja számolni
+            $level_number = 0;
+            foreach (array_reverse($levels) as $k => $v) {
+                if ($v !== null) {
+                    $path .= $v . ' &raquo; ';
+                    $level_number++;
+                }
+            }
+
+            //$path = ltrim($path, 'termékek &raquo; ');
+            //$path = rtrim($path, ' &raquo; ');
+            $path = rtrim($path, " arquo; ");
+            $path = rtrim($path, " &");
+            // 'kenyérmorzsa' elem hozzáadaása a tömbhöz. Kategória >> alktegória  >> alkategória          
+            $categories_arr[$key]['category_path'] = $path;
+
+            // hozzáadunk a tömbhöz egy szintek száma elemet
+            $categories_arr[$key]['level'] = $level_number;
+
+//var_dump($path); 
+
+            // hozzáadunk egy children elemet a tömbhöz. Ha van alktegória akkor true, egyébként false
+            if (!empty($this->product_categories_model->get_children($value['cat_id']))) {
+                $categories_arr[$key]['children'] = true;
+            } else {
+                $categories_arr[$key]['children'] = false;
+            }
+            
         }
+
+//var_dump($categories_arr);
+
 
         return $categories_arr;
     }
-
-            /**
-             *  Termék kategóriákból lista létrehozása fa generáláshoz  
-             *
-             *  @return string html kód
-             */
-            private function _get_category_tree()
-            {
-                $result = $this->product_categories_model->get_subcategory(1);
-                $list = '<ul>';
-                foreach ($result as $value) {
-
-                    $list .= '<li>' . $value['product_category_name'] . ' (' . $this->_get_product_count($value['product_category_id']) . ')';
-                    $list .= '<ul>';
-
-                    $sub_result = $this->product_categories_model->get_subcategory($value['product_category_id']);
-
-                    foreach ($sub_result as $sub_value) {
-
-                        $list .= '<li>' . $sub_value['product_category_name'] . ' (' . $this->_get_product_count($sub_value['product_category_id']) . ')';
-                        $list .= '<ul>';
-                        $sub_sub_result = $this->product_categories_model->get_subcategory($sub_value['product_category_id']);
-
-                        foreach ($sub_sub_result as $sub_sub_value) {
-                            $list .= '<li>' . $sub_sub_value['product_category_name'] . ' (' . $this->_get_product_count($sub_sub_value['product_category_id']) . ')';
-                            $list .= '<ul>';
-                            $sub_sub_sub_result = $this->product_categories_model->get_subcategory($sub_sub_value['product_category_id']);
-                            foreach ($sub_sub_sub_result as $sub_sub_sub_value) {
-                                $list .= '<li>' . $sub_sub_sub_value['product_category_name'] . ' (' . $this->_get_product_count($sub_sub_sub_value['product_category_id']) . ')' . '</li>';
-                            }
-
-                            $list .= '</ul>';
-                            $list .= '</li>';
-                        }
-                        $list .= '</ul>';
-                        $list .= '</li>';
-                    }
-                    $list .= '</ul>';
-                    $list .= '</li>';
-                }
-                $list .= '</ul>';
-
-                return $list;
-            }
 
     /**
      *  Termék kategóriákból lista létrehozása fa generáláshoz  
      *
      *  @return string html kód
      */
-    private function _get_category_tree_2()
+    private function _get_category_tree()
     {
         $result = $this->product_categories_model->get_subcategory(0);
         $list = '<ul>';
         foreach ($result as $value) {
 
-            $list .= '<li>' . $value['product_category_name'] . ' (' . $this->products_model->product_number_in_category($value['product_category_id']) . ')';
+            $list .= '<li>' . $value['product_category_name'] . ' (' . $this->_get_product_count($value['product_category_id']) . ')';
             $list .= '<ul>';
 
             $sub_result = $this->product_categories_model->get_subcategory($value['product_category_id']);
 
             foreach ($sub_result as $sub_value) {
 
-                $list .= '<li>' . $sub_value['product_category_name'] . ' (' . $this->products_model->product_number_in_category($sub_value['product_category_id']) . ')';
+                $list .= '<li>' . $sub_value['product_category_name'] . ' (' . $this->_get_product_count($sub_value['product_category_id']) . ')';
                 $list .= '<ul>';
                 $sub_sub_result = $this->product_categories_model->get_subcategory($sub_value['product_category_id']);
 
                 foreach ($sub_sub_result as $sub_sub_value) {
-                    $list .= '<li>' . $sub_sub_value['product_category_name'] . ' (' . $this->products_model->product_number_in_category($sub_sub_value['product_category_id']) . ')';
+                    $list .= '<li>' . $sub_sub_value['product_category_name'] . ' (' . $this->_get_product_count($sub_sub_value['product_category_id']) . ')';
                     $list .= '<ul>';
                     $sub_sub_sub_result = $this->product_categories_model->get_subcategory($sub_sub_value['product_category_id']);
                     foreach ($sub_sub_sub_result as $sub_sub_sub_value) {
-                        $list .= '<li>' . $sub_sub_sub_value['product_category_name'] . ' (' . $this->products_model->product_number_in_category($sub_sub_sub_value['product_category_id']) . ')' . '</li>';
+                        $list .= '<li>' . $sub_sub_sub_value['product_category_name'] . ' (' . $this->_get_product_count($sub_sub_sub_value['product_category_id']) . ')' . '</li>';
                     }
 
                     $list .= '</ul>';
@@ -925,7 +921,6 @@ die;
 
         return $list;
     }
-
 
     /**
      * Termékekek száma kategóriában és az alá tartozó kategóriákban    
