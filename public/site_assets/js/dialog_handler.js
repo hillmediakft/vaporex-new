@@ -8,7 +8,7 @@ var dialogHandler = function () {
         var $data = $("#login_form").serialize();
 
         $.ajax({
-            url: "users/ajax_login",
+            url: "user/login",
             data: $data,
             type: "POST",
             dataType: "json",
@@ -111,7 +111,12 @@ var dialogHandler = function () {
         $("#new_pw_button").on('click', function (e) {
             e.preventDefault();
             $("#modal_login").modal('hide');
-            handle_forgottenpw_dialog();
+
+            // az elfelejtett jelszó modal megjelenését várakoztatni kell, hogy befejeződjön a login modal eltűnése, mert hibát okoz
+            setTimeout(function() {
+                handle_forgottenpw_dialog();
+            }, 500);
+
         });
     };
 
@@ -124,7 +129,7 @@ var dialogHandler = function () {
         var $data = $("#forgottenpw_form").serialize();
 
         $.ajax({
-            url: "users/ajax_forgottenpw",
+            url: "user/forgottpw",
             data: $data,
             type: "POST",
             dataType: "json",
@@ -224,7 +229,7 @@ var dialogHandler = function () {
         var $data = $("#register_form").serialize();
 
         $.ajax({
-            url: "regisztracio/ajax_register",
+            url: "user/register",
             data: $data,
             type: "POST",
             dataType: "json",
@@ -244,7 +249,10 @@ var dialogHandler = function () {
                     });
 
                     //$success_messages += '<br />';
-                   $('#modal_register').modal('hide');
+                    $('#modal_register').modal('hide');
+
+                    // form reset
+                    document.getElementById('register_form').reset();
 
                     toastr['success']($success_messages);
                 }
@@ -507,14 +515,11 @@ var dialogHandler = function () {
             handle_login_dialog();
             handle_register_dialog();
             handle_newsletter_dialog();
-
         }
 
     };
 }();
+
 jQuery(document).ready(function () {
-
     dialogHandler.init();
-
-
 });
