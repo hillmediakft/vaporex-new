@@ -31,12 +31,12 @@ class PhotoGallery extends AdminController {
 		$data['title'] = 'Fotó galériák oldal';
 		$data['description'] = 'Fotó galériák oldal description';
 		// kategóriák
-		$data['categorys'] = $this->photocategory_model->selectAll();
+		$data['categories'] = $this->photocategory_model->selectAll();
 		// összes rekord a photo_gallery-ból	
 		$data['all_photos'] = $this->photo_gallery_model->selectAll();
 // $view->debug(true);
 		$view->add_link('css', ADMIN_CSS . 'pages/portfolio.css');
-		$view->add_links(array('bootbox', 'mixitup', 'vframework', 'photo_gallery'));
+		$view->add_links(array('bootbox', 'fancybox', 'mixitup', 'vframework', 'photo_gallery'));
 		$view->setHelper(array('url_helper'));
 		$view->render('photo_gallery/tpl_photo_gallery', $data);
 	}
@@ -59,7 +59,6 @@ class PhotoGallery extends AdminController {
 					Message::set('error', $this->request->getFilesError('upload_gallery_photo'));
 					$this->response->redirect('admin/photo-gallery/insert');					
 				}
-
 				$data['photo_filename'] =  $filename;
 				$data['photo_caption'] = $this->request->get_post('photo_caption');
 				$data['photo_category'] = $this->request->get_post('photo_category', 'integer');
@@ -81,9 +80,9 @@ class PhotoGallery extends AdminController {
 
 		$data['title'] = 'Új fotó oldal';
 		$data['description'] = 'Új fotó oldal description';
-		$data['categorys'] = $this->photocategory_model->selectAll();
+		$data['categories'] = $this->photocategory_model->selectAll();
 
-		$view->add_links(array('bootstrap-fileupload', 'vframework', 'photo_gallery_insert_update'));
+		$view->add_links(array('bootstrap-fileinput', 'vframework', 'photo_gallery_insert_update'));
 		$view->render('photo_gallery/tpl_photo_insert', $data);	
 	}
 	
@@ -139,10 +138,10 @@ class PhotoGallery extends AdminController {
 
 		$data['title'] = 'Fotó szerkesztése oldal';
 		$data['description'] = 'Fotó szerkesztése description';
-		$data['categorys'] = $this->photocategory_model->selectAll();
+		$data['categories'] = $this->photocategory_model->selectAll();
 		$data['photo'] = $this->photo_gallery_model->selectOne($id);
 
-		$view->add_links(array('bootstrap-fileupload', 'vframework', 'photo_gallery_insert_update'));
+		$view->add_links(array('bootstrap-fileinput', 'vframework', 'photo_gallery_insert_update'));
 		$view->render('photo_gallery/tpl_photo_update', $data);	
 	}
 	
@@ -235,7 +234,7 @@ class PhotoGallery extends AdminController {
 
 		$data['title'] = 'Admin fotó kategóriák oldal';
 		$data['description'] = 'Admin fotó kategóriák oldal description';	
-		$data['all_category'] = $this->photocategory_model->selectAll();
+		$data['all_categories'] = $this->photocategory_model->selectAll();
 		$data['category_counter'] = $this->photo_gallery_model->categoryCounter();
 
 		$view->add_links(array('bootbox', 'datatable', 'bootstrap-editable', 'vframework', 'photo_category'));
@@ -248,84 +247,84 @@ class PhotoGallery extends AdminController {
 	public function delete_category()
 	{
         if($this->request->is_ajax()){
-	        if(1){
-	        	// a POST-ban kapott user_id egy tömb
-	        	$id = $this->request->get_post('item_id', 'integer');
-				// a sikeres törlések számát tárolja
-				$success_counter = 0;
-				// a sikertelen törlések számát tárolja
-				$fail_counter = 0; 
 
-				// lekérdezzük a törlendő képek nevét
-				$photo_names_temp = $this->photo_gallery_model->selectFilenameWhereCategory($id);			
-
-				$photo_names = array();
-				foreach ($photo_names_temp as $key => $value) {
-					$photo_names[] = $value['photo_filename'];
-				}
-				unset($photo_names_temp);
-
-				// képekhez tartozó rekordok törlése
-				$result = $this->photo_gallery_model->deleteWhereCategory($id);
-
-				// képek törlése
-				if($result !== false) {
-					if($result > 0){
-
-						$file_helper = DI::get('file_helper');
-						$url_helper = DI::get('url_helper');
-						$upload_path = Config::get('photogallery.upload_path');
-
-						foreach($photo_names as $value)
-						{
-							$picture_path = $upload_path . $value;
-							$thumb_picture_path = $url_helper->thumbPath($picture_path);
-							$file_helper->delete(array($picture_path, $thumb_picture_path));
-						}				
-					}
-				}
-
-				// kategória törlése
-				$result = $this->photocategory_model->deleteCategory($id);
-				
-				if($result !== false) {
-					// ha a törlési sql parancsban nincs hiba
-					if($result > 0){
-						$success_counter += $result;
-					}
-					else {
-						//sikertelen törlés
-						$fail_counter++;
-					}
-				}
-				else {
-					// ha a törlési sql parancsban hiba van
-	                $this->response->json(array(
-	                    'status' => 'error',
-	                    'message_error' => 'Hibas sql parancs: nem sikerult a DELETE lekerdezes az adatbazisbol!',                  
-	                ));
-				}
-
-		        // üzenetek visszaadása
-		        $respond = array();
-		        $respond['status'] = 'success';
-		        
-		        if ($success_counter > 0) {
-		            $respond['message_success'] = 'Kategória törölve.';
-		        }
-		        if ($fail_counter > 0) {
-		            $respond['message_error'] = 'A kategóriát már törölték!';
-		        }
-
-		        // respond tömb visszaadása
-		   		$this->response->json($respond);
-
-	        } else {
+        	if (!Auth::hasAccess('photogallery.delete_category')) {
 	            $this->response->json(array(
 	            	'status' => 'error',
 	            	'message' => 'Nincs engedélye a művelet végrehajtásához!'
 	            ));
+        	}
+
+        	// a POST-ban kapott user_id egy tömb
+        	$id = $this->request->get_post('item_id', 'integer');
+			// a sikeres törlések számát tárolja
+			$success_counter = 0;
+			// a sikertelen törlések számát tárolja
+			$fail_counter = 0; 
+
+			// lekérdezzük a törlendő képek nevét
+			$photo_names_temp = $this->photo_gallery_model->selectFilenameWhereCategory($id);			
+
+			$photo_names = array();
+			foreach ($photo_names_temp as $key => $value) {
+				$photo_names[] = $value['photo_filename'];
+			}
+			unset($photo_names_temp);
+
+			// képekhez tartozó rekordok törlése
+			$result = $this->photo_gallery_model->deleteWhereCategory($id);
+
+			// képek törlése
+			if($result !== false) {
+				if($result > 0){
+
+					$file_helper = DI::get('file_helper');
+					$url_helper = DI::get('url_helper');
+					$upload_path = Config::get('photogallery.upload_path');
+
+					foreach($photo_names as $value)
+					{
+						$picture_path = $upload_path . $value;
+						$thumb_picture_path = $url_helper->thumbPath($picture_path);
+						$file_helper->delete(array($picture_path, $thumb_picture_path));
+					}				
+				}
+			}
+
+			// kategória törlése
+			$result = $this->photocategory_model->deleteCategory($id);
+			
+			if($result !== false) {
+				// ha a törlési sql parancsban nincs hiba
+				if($result > 0){
+					$success_counter += $result;
+				}
+				else {
+					//sikertelen törlés
+					$fail_counter++;
+				}
+			}
+			else {
+				// ha a törlési sql parancsban hiba van
+                $this->response->json(array(
+                    'status' => 'error',
+                    'message_error' => 'Hibas sql parancs: nem sikerult a DELETE lekerdezes az adatbazisbol!',                  
+                ));
+			}
+
+	        // üzenetek visszaadása
+	        $respond = array();
+	        $respond['status'] = 'success';
+	        
+	        if ($success_counter > 0) {
+	            $respond['message_success'] = 'Kategória törölve.';
 	        }
+	        if ($fail_counter > 0) {
+	            $respond['message_error'] = 'A kategóriát már törölték!';
+	        }
+
+	        // respond tömb visszaadása
+	   		$this->response->json($respond);
         }
 	}
 

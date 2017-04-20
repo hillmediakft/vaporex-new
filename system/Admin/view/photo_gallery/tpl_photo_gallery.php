@@ -45,8 +45,8 @@
 									<li class="filter" data-filter="all">
 										 Összes
 									</li>
-									<?php foreach ($categorys as $value) { ?>
-									<li class="filter" data-filter="category_<?php echo $value['category_id']; ?>">
+									<?php foreach ($categories as $value) { ?>
+									<li class="filter" data-filter="category_<?php echo $value['id']; ?>">
 										 <?php echo $value['category_name']; ?>
 									</li>									
 									<?php } ?>
@@ -69,7 +69,7 @@
 												<a class="mix-edit" href="admin/photo-gallery/update/<?php echo $photo['photo_id'];?>">
 													<i class="fa fa-edit"></i>
 												</a>
-												<a class="mix-preview fancybox-button" href="<?php echo $photo['photo_filename'];?>" title="Project Name" data-rel="fancybox-button">
+												<a class="mix-preview fancybox-button" href="<?php echo $this->getConfig('photogallery.upload_path') . $photo['photo_filename'];?>" title="Project Name" data-rel="fancybox-button">
 													<i class="fa fa-search"></i>
 												</a>
 											</div>

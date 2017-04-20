@@ -6,7 +6,7 @@ use System\Libs\Config;
 class PhotoCategory_model extends AdminModel {
 
 	protected $table = 'photo_category';
-	protected $id = 'category_id';
+	protected $id = 'id';
 
 	function __construct()
 	{
@@ -20,7 +20,7 @@ class PhotoCategory_model extends AdminModel {
 	 */
 	public function selectOne($id)
 	{
-		$this->query->set_where('category_id', '=', $id); 
+		$this->query->set_where('id', '=', $id); 
 		return $this->query->select(); 
 	}
 
@@ -45,7 +45,7 @@ class PhotoCategory_model extends AdminModel {
 	 */
 	public function updateCategory($id, $new_name)
 	{
-		$this->query->set_where('category_id', '=', $id);
+		$this->query->set_where('id', '=', $id);
 		return $this->query->update(array('category_name' => $new_name));		
 	}
 
@@ -54,7 +54,7 @@ class PhotoCategory_model extends AdminModel {
 	 */
 	public function deleteCategory($id)
 	{
-		return $this->query->delete('category_id', '=', $id);		
+		return $this->query->delete('id', '=', $id);		
 	}
 
 }

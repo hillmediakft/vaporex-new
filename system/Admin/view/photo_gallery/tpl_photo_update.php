@@ -42,15 +42,26 @@
 										
 									<div class="col-md-6">
 
-										<label class="control-label">Kép feltöltése</label>					
-										<div class="fileupload fileupload-new" data-provides="fileupload">
-											<div class="fileupload-new thumbnail" style="width: 400px; height: 300px;"><img src="<?php echo $this->getConfig('photogallery.upload_path') . $photo['photo_filename'];?>" /></div>
-											<div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 400px; max-height: 300px; line-height: 20px;"></div>
-											<div>
-												<span class="btn btn-file green"><span class="fileupload-new">Kiválasztás</span><span class="fileupload-exists">Módosít</span><input id="uploadprofile" class="img" type="file" name="upload_gallery_photo"></span>
-												<a href="#" class="btn btn-warning" data-dismiss="fileupload">Töröl</a>
-											</div>
-										</div>
+										<!-- bootstrap file upload -->
+		                                <label class="control-label">Kép feltöltése</label>
+		                                <div class="form-group ">
+		                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+		                                        <div class="fileinput-new thumbnail" style="width: 400px; height: 300px;">
+		                                            <img src="<?php echo $this->getConfig('photogallery.upload_path') . $photo['photo_filename'];?>" alt=""/>
+		                                        </div>
+		                                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 400px; max-height: 300px; line-height: 20px;"></div>
+		                                        <div>
+		                                            <span class="btn default btn-file">
+		                                                <span class="fileinput-new">Kiválasztás</span>
+		                                                <span class="fileinput-exists">Módosít</span>
+		                                                <input class="img" type="file" name="upload_gallery_photo">
+		                                            </span>
+		                                            <a href="javascript:;" class="btn btn-warning fileinput-exists" data-dismiss="fileinput">Töröl</a>
+		                                        </div>
+		                                    </div>
+		                                </div>
+										<!-- bootstrap file upload -->
+
 										<div class="clearfix"></div>
 
 										<div class="note note-info">
@@ -68,8 +79,8 @@
 											<label for="photo_category" class="control-label">Fotó kategória</label>
 											<select class="form-control input-xlarge" name="photo_category" aria-controls="category">
 												<option value="">Válasszon kategóriát</option>
-												<?php foreach ($categorys as $value) { ?>
-													<option value="<?php echo $value['category_id']; ?>" <?php echo ($photo['photo_category'] == $value['category_id']) ? 'selected' : '';?>><?php echo $value['category_name']; ?></option>
+												<?php foreach ($categories as $category) { ?>
+													<option value="<?php echo $category['id']; ?>" <?php echo ($photo['photo_category'] == $category['id']) ? 'selected' : '';?>><?php echo $category['category_name']; ?></option>
 												<?php } ?>	
 											</select>
 										</div>											

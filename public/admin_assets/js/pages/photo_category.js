@@ -1,73 +1,5 @@
 var Photo_category = function () {
 
-/*
-    var PhotoCategoryTable = function () {
-        var table = $('#photo_category');
-	
-		table.dataTable({
-
-            "language": {
-                // metronic specific
-                "metronicGroupActions": "_TOTAL_ sor kiválasztva: ",
-                "metronicAjaxRequestGeneralError": "A kérés nem hajtható végre, ellenőrizze az internet kapcsolatot!",
-
-                // data tables specific                
-                "decimal":        "",
-                "emptyTable":     "Nincs megjeleníthető adat!",
-                "info":           "_START_ - _END_ elem &nbsp; _TOTAL_ elemből",
-                "infoEmpty":      "Nincs megjeleníthető adat!",
-                "infoFiltered":   "(Szűrve _MAX_ elemből)",
-                "infoPostFix":    "",
-                "thousands":      ",",
-                "lengthMenu":     " _MENU_ elem/oldal",
-                "loadingRecords": "Betöltés...",
-                "processing":     "Feldolgozás...",
-                "search":         "Keresés:",
-                "zeroRecords":    "Nincs egyező elem",
-                "paginate": {
-                    "previous":   "Előző",
-                    "next":       "Következő",
-                    "last":       "Utolsó",
-                    "first":      "Első",
-                    "pageOf":     "&nbsp;/&nbsp;"
-                },
-                "aria": {
-                    "sortAscending":  ": aktiválja a növekvő rendezéshez",
-                    "sortDescending": ": aktiválja a csökkenő rendezéshez"
-                }            
-            },
-            
-            // set default column settings
-            "columnDefs": [
-                {"orderable": true, "searchable": true, "targets": 0},
-                {"orderable": true, "searchable": false, "targets": 1},
-                {"orderable": false, "searchable": false, "targets": 2}
-            ],
-
-            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js). 
-            // So when dropdowns used the scrollable div should be removed. 
-            // "dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-
-            "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
-        
-            "lengthMenu": [
-                [5, 15, 20, -1],
-                [5, 15, 20, "All"] // change per page values here
-            ],
-            // set the initial value
-            "pageLength": 20,            
-            "pagingType": "bootstrap_full_number",
-            "order": [
-                [0, "asc"]
-            ] // set column as a default sort by asc
-		
-        });
-
-    };
-*/
-
-
     var handleTable = function () {
 
         function restoreRow(oTable, nRow) {
@@ -106,7 +38,6 @@ var Photo_category = function () {
             oTable.fnUpdate('<a class="edit" href=""><i class="fa fa-edit"></i> Szerkeszt</a>', nRow, 2, false);
             oTable.fnDraw();
         }
-
 
 
 
@@ -163,7 +94,7 @@ var Photo_category = function () {
         
             "lengthMenu": [
                 [5, 15, 20, -1],
-                [5, 15, 20, "All"] // change per page values here
+                [5, 15, 20, "Összes"] // change per page values here
             ],
             // set the initial value
             "pageLength": 20,            
@@ -204,22 +135,6 @@ var Photo_category = function () {
                 });
 
                 return;
-
-/*
-                if (confirm("A szerkesztett sort nem mentette el. Akarja menteni?")) {
-                    //saveRow(oTable, nEditing); // save
-                    //$(nEditing).find("td:first").html("Untitled");
-                    nEditing = null;
-                    nNew = false;
-
-                } else {
-                    oTable.fnDeleteRow(nEditing); // cancel
-                    nEditing = null;
-                    nNew = false;
-
-                    return;
-                }
-*/
 
             }
 
@@ -369,7 +284,7 @@ var Photo_category = function () {
                                 id: id,
                                 data: data
                             },
-                            url: "admin/photo_gallery/category_insert_update",
+                            url: "admin/photo-gallery/category_insert_update",
                             dataType: "json",
                             beforeSend: function () {
                                 App.blockUI({
