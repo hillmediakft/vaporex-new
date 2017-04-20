@@ -91,8 +91,7 @@ class Application {
 
 
             $router->get('/profil', 'Profile@index');
-            $router->post('/profile/change_userdata', 'Profile@changeUserdata'); // ajax
-            $router->post('/profile/change_password', 'Profile@changePassword'); // ajax
+            $router->post('/profil/update', 'Profile@update'); // ajax
 
             $router->post('/user/login', 'user@login'); // ajax
             $router->get('/felhasznalo/kijelentkezes', 'user@logout');
@@ -195,12 +194,13 @@ class Application {
                 $router->post('/user/deleteimage', 'User@deleteImage');
 
             // photo gallery	
-                $router->get('/photo-gallery', 'photo_gallery@index');
-                $router->post('/photo-gallery/delete_photo', 'photo_gallery@delete_photo');
-                $router->post('/photo-gallery/delete_category', 'photo_gallery@delete_category');
-                $router->match('GET|POST', '/photo-gallery/insert', 'photo_gallery@insert');
-                $router->match('GET|POST', '/photo-gallery/update/:id', 'photo_gallery@update', array('id'));
-                $router->get('/photo-gallery/category', 'photo_gallery@category');
+                $router->get('/photo-gallery', 'photoGallery@index');
+                $router->match('GET|POST', '/photo-gallery/insert', 'photoGallery@insert');
+                $router->match('GET|POST', '/photo-gallery/update/:id', 'photoGallery@update', array('id'));
+                $router->get('/photo-gallery/category', 'photoGallery@category');
+                $router->post('/photo-gallery/category_insert_update', 'photoGallery@category_insert_update');
+                $router->post('/photo-gallery/delete_photo', 'photoGallery@delete_photo');
+                $router->post('/photo-gallery/delete_category', 'photoGallery@delete_category');
 
             // slider	
                 $router->get('/slider', 'slider@index');

@@ -13,5 +13,4 @@ class Cegunkrol_model extends SiteModel {
     }
 
 }
-
 ?>

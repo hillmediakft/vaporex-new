@@ -17,7 +17,7 @@ use System\Libs\Auth;
                         <?php } ?>
 
                         <?php if ($logged_in) { ?>
-                            <li><span><a href="profil"><i class="fa fa-user"></i> <?php echo Auth::getUser('name'); ?></a>&nbsp; | </span><a href="felhasznalok/kijelentkezes"><i class="fa fa-sign-out"></i> Kijelentkezés</a></li>
+                            <li><span><a href="profil"><i class="fa fa-user"></i> <?php echo Auth::getUser('name'); ?></a>&nbsp;</span><a href="felhasznalo/kijelentkezes"><i class="fa fa-sign-out"></i> Kijelentkezés</a></li>
                         <?php } else { ?>
                             <li><a href="javascript:void();" data-toggle="modal" data-target="#modal_register"><i class="fa fa-edit"></i>Regisztráció</a></li>
                             <li><a href="javascript:void();" data-toggle="modal" data-target="#modal_login"><i class="fa fa-sign-in"></i> Bejelentkezés</a></li>
