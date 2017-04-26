@@ -85,6 +85,8 @@ class Application {
             
             // kosár
             $router->get('/kosar', 'Kosar@index');
+            $router->post('/kosar/additem', 'Kosar@addItem');
+            $router->post('/kosar/clear', 'Kosar@removeAllItem');
 
 
 
