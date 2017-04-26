@@ -19,8 +19,7 @@
                     </div>
                     <div class="top-cart"> 
                         <a href="kosar"> 
-                            
-                            <i class="fa fa-shopping-cart"></i> Kosár <span class="badge">3</span>
+                            <i class="fa fa-shopping-cart"></i> Kosár <span class="badge" id="cart_items_number"><?php echo $cart_items_number; ?></span>
                         </a> 
                     </div>
                 </div>
