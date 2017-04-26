@@ -18,7 +18,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-3"    >
-                <?php include('system/site/view/_template/tpl_sidebar.php'); ?> 
+                <?php include($this->path('tpl_sidebar')); ?> 
             </div>
             <div class="col-xs-12 col-sm-12 col-md-9 ">
                 <div class="row">
@@ -28,16 +28,24 @@
                                 <h2 class="heading"><span>Kosár</span></h2>
                             </div>
                         </header>
+
+<!-- kosár törlése -->
+<button id="clear-cart-button" class="btn btn-primary" type="button">Kosár kiürítése</button>
+
+
+
                         <p>A kosárba helyezett termékek</p>
                         <?php if (empty($items)) { ?>
                             <p>Nincs termék a kosárban</p>
-                        <?php } ?>
-                        <?php if (!empty($items)) { ?>
+                        <?php } else {
+
+                            foreach ($items as $key => $value) {
+                                echo $key . "-as termékből - " . $value . " db</br>";
+                            }
+
+                        ?>
+                            <hr>
                             <form id="kosar_form" name="kosar_form" action="kosar/ajax" method="post">
-
-
-
-
                                 <div id="kosar_submit">
                                     <button id="submit-button" name="submit-button" class="btn btn-primary" value="Kalkuláció" type="submit">Kalkuláció</button>
                                 </div>
