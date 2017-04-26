@@ -54,7 +54,6 @@ class Termekek extends SiteController {
         $data['product_name'] = $this->termekek_model->get_product_name_by_id($id);
         $data['product'] = $this->termekek_model->product_details($id);
         $data['product_category_path'] = $this->termekek_model->product_category_path_with_link($data['product_category_id']);
-//var_dump($data);die;
         $data['title'] = $data['product_name']['product_title'];
         $data['description'] = $data['product_name']['product_title'];
         $data['keywords'] = '';
