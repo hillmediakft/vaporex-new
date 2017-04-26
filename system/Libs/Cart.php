@@ -28,8 +28,9 @@ class Cart {
      * @param boolean $cookie Store cart items in cookie
      */
     public function __construct($sessionId = '', $cookie = false) {
-        if (!session_id())
+        if (!session_id()) {
             session_start();
+        }
 
         $this->sessionId = (!empty($sessionId)) ? $sessionId : str_replace('.', '_', ((isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '')) . '_cart';
         $this->cookie = ($cookie) ? true : false;
@@ -62,6 +63,19 @@ class Cart {
      */
     public function getItems() {
         return $this->items;
+    }
+
+    public function getItemsNumber($item = null)
+    {
+        if (!is_null($item)) {
+            return (int)$this->items[$item];
+        } else {
+            $counter = 0;
+            foreach ($this->items as $key => $value) {
+                $counter += $value; 
+            }
+            return $counter;
+        }
     }
 
     /**
@@ -114,8 +128,9 @@ class Cart {
             return false;
         }
 
-        if ($this->itemLimit > 0 && count($this->items) >= $this->itemLimit)
+        if ($this->itemLimit > 0 && count($this->items) >= $this->itemLimit){
             $this->clear();
+        }
 
         $this->items[$id] = (isset($this->items[$id])) ? ($this->items[$id] + $qty) : $qty;
         $this->items[$id] = ($this->items[$id] > $this->quantityLimit) ? $this->quantityLimit : $this->items[$id];
@@ -191,8 +206,9 @@ class Cart {
             return false;
         }
 
-        if ($qty < 1)
+        if ($qty < 1) {
             return $this->remove($id);
+        }
 
         $this->items[$id] = ($qty > $this->quantityLimit) ? $this->quantityLimit : $qty;
         $this->write();
@@ -227,8 +243,9 @@ class Cart {
     public function destroy() {
         unset($_SESSION[$this->sessionId]);
 
-        if ($this->cookie)
+        if ($this->cookie){
             setcookie($this->sessionId, '', time() - 86400);
+        }
 
         $this->items = array();
         $this->attributes = array();
@@ -254,8 +271,9 @@ class Cart {
 
         $items = @explode(';', $listItem);
         foreach ($items as $item) {
-            if (!$item || !strpos($item, ','))
+            if (!$item || !strpos($item, ',')){
                 continue;
+            }
 
             list($id, $qty) = @explode(',', $item);
             $this->items[$id] = $qty;
@@ -263,8 +281,9 @@ class Cart {
 
         $attributes = @explode(';', $listAttribute);
         foreach ($attributes as $attribute) {
-            if (!strpos($attribute, ','))
+            if (!strpos($attribute, ',')){
                 continue;
+            }
 
             list($id, $key, $value) = @explode(',', $attribute);
 
@@ -278,19 +297,22 @@ class Cart {
     private function write() {
         $_SESSION[$this->sessionId] = '';
         foreach ($this->items as $id => $qty) {
-            if (!$id)
+            if (!$id){
                 continue;
+            }
 
             $_SESSION[$this->sessionId] .= $id . ',' . $qty . ';';
         }
 
         $_SESSION[$this->sessionId . '_attributes'] = '';
         foreach ($this->attributes as $id => $attributes) {
-            if (!$id)
+            if (!$id){
                 continue;
+            }
 
-            foreach ($attributes as $key => $value)
+            foreach ($attributes as $key => $value){
                 $_SESSION[$this->sessionId . '_attributes'] .= $id . ',' . $key . ',' . $value . ';';
+            }
         }
 
         $_SESSION[$this->sessionId] = rtrim($_SESSION[$this->sessionId], ';');
