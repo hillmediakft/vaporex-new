@@ -1,6 +1,7 @@
 <?php
 namespace System\Core;
 use System\Libs\Auth;
+use System\Libs\Cart;
 
 class SiteController extends Controller {
 
@@ -14,6 +15,11 @@ class SiteController extends Controller {
      */
     protected $lang = LANG;
     
+    /**
+     * Kosár objektumot tartalmazza
+     */
+    protected $cart; 
+
     /**
      * Minden site oldali controllerben lefut
      */
@@ -33,6 +39,11 @@ class SiteController extends Controller {
         } else {
             $this->global_data['logged_in'] = false;
         }
+
+        // KOSÁR objektum létrehozása, ha nem ajaxos a kérés
+            $this->cart = new Cart();
+            $this->global_data['cart_items_number'] = $this->cart->getItemsNumber();
+
 
         if (!$this->request->is_ajax()) {
             // settings betöltése és hozzárendelése a controllereken belül elérhető a global_data változóhoz
