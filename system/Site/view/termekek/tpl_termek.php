@@ -38,7 +38,7 @@ use System\Libs\Config;
                                     </div>
                                 </div>
                                 <div class="product-button-group">
-                                    <form id="add_to_cart_form" action="" method="POST">
+                                    <form id="add_to_cart_form" action="kosar/additem" method="POST">
                                     <div class="btn-group cart">
                                         <button id="add_to_cart_button" type="submit" class="btn btn-primary"> Hozzáadás a kosárhoz  </button>
                                     </div>
