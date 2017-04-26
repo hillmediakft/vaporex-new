@@ -48,7 +48,7 @@
                             <div class="isotope-frame isotope-skin2  animated" data-animation="bounceInUp">
                                 <div class="isotope-filter">
                                     <?php foreach ($referenciak as $value) { ?>
-                                        <div class="isotope-item  <?php echo $value['project_category_id']; ?>"> <img src="<?php echo $value['project_photo']; ?>" width="400" height="350" alt="img">
+                                        <div class="isotope-item  <?php echo $value['project_category_id']; ?>"> <img src="<?php echo $this->getConfig('projectphoto.upload_path') . $value['project_photo']; ?>" width="400" height="350" alt="img">
                                             <div class="slide-desc">
                                                 <table>
                                                     <tr>
