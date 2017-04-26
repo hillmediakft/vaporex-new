@@ -39,7 +39,7 @@
             <ul class="product-mini-list  unstyled ">
                 <?php foreach ($new_products as $value) : ?>
                     <li>
-                        <div class="entry-thumbnail"> <a href="termekek/<?php echo $value['product_id']; ?>" class="img"> <img src="<?php echo $value['product_photo']; ?>"  alt="img"/></a> </div>
+                        <div class="entry-thumbnail"> <a href="termekek/<?php echo $value['product_id']; ?>" class="img"> <img src="<?php echo $this->getConfig('productphoto.upload_path') . $value['product_photo']; ?>"  alt="img"/></a> </div>
                         <div class="entry-main">
                             <div class="entry-header">
                                 <h5 class="entry-title"><a href="termekek/<?php echo $value['product_id']; ?>"><?php echo $value['product_title']; ?></a></h5>
