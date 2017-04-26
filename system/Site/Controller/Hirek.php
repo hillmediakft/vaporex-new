@@ -38,10 +38,10 @@ class Hirek extends SiteController {
         //$language_code = ($this->registry->lang == 'hu') ? '' : $this->registry->lang;
         // lapozó linkek
         $data['pagine_links'] = $pagine->page_links($this->request->get_uri('path_full'));
-
         //hír kategóriák
         $data['hirek_categories'] = $this->hirek_model->get_blog_categories();
 
+//var_dump($data);die;
         $view = new View();
         $view->setHelper(array('url_helper', 'str_helper'));
         $view->render('hirek/tpl_hirek', $data);
@@ -57,14 +57,13 @@ class Hirek extends SiteController {
         $page_data = $this->hirek_model->getPageData('hirek');
         $data = $this->addGlobalData();
 
-        $content = $this->hirek_model->blog_query($id);
-
+        $content = $this->hirek_model->oneBlog($id);
         if (empty($content)) {
             $this->response->redirect('error');
         }
 
-        $data['title'] = $content['blog_title'] . ' | Vaporex';
-        $data['description'] = $content['blog_title'];
+        $data['title'] = $content['title'] . ' | Vaporex';
+        $data['description'] = $content['title'];
         $data['blog'] = $content;
 
         $data['keywords'] = '';

@@ -31,7 +31,11 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-4 ">
                                 <div class="entry-media">
-                                    <div class="entry-thumbnail"><a href="<?php echo $this->request->get_uri('site_url') . 'hirek/' . $value['blog_slug'] . '/' . $value['blog_id']; ?>" ><img class="img-responsive" src="<?php echo $value['blog_picture']; ?>" alt="<?php echo $value['blog_title']; ?>"/></a> </div>
+                                    <div class="entry-thumbnail">
+                                        <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/' . $value['slug'] . '/' . $value['id']; ?>" >
+                                            <img class="img-responsive" src="<?php echo $this->getConfig('blogphoto.upload_path') . $value['picture']; ?>" alt="<?php echo $value['title']; ?>"/>
+                                        </a> 
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-8">
@@ -39,20 +43,19 @@
 
                                     <div class="entry-meta clearfix">
                                         <ul class="unstyled clearfix">
-                                            <li>Kategória: <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/kategoria/' . $value['blog_category']; ?>"><?php echo $value['category_name']; ?></a></li>
+                                            <li>Kategória: <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/kategoria/' . $value['category_id']; ?>"><?php echo $value['category_name']; ?></a></li>
                                             <li>/</li>
-                                            <li> <i class="fa fa-calendar"></i> <?php echo $value['blog_add_date']; ?></li>
+                                            <li> <i class="fa fa-calendar"></i> <?php echo $value['add_date']; ?></li>
                                         </ul>
                                     </div>
                                     <h3 class="entry-title"> 
-                                        <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/' . $value['blog_slug'] . '/' . $value['blog_id']; ?>" ><?php echo $value['blog_title']; ?>
+                                        <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/' . $value['slug'] . '/' . $value['id']; ?>" ><?php echo $value['title']; ?>
                                         </a> 
                                     </h3>
                                     <div class="entry-content">
-                                        <p><?php echo $this->str_helper->sentenceTrim($value['blog_body'], 3); ?></p>
+                                        <p><?php echo $this->str_helper->sentenceTrim($value['body'], 3); ?></p>
                                         <div class="entry-footer"> 
-                                            <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/' . $value['blog_slug'] . '/' . $value['blog_id']; ?>" class="btn btn-sm btn-primary">Tovább <i class="fa fa-angle-double-right"></i>
-                                            </a> 
+                                            <a href="<?php echo $this->request->get_uri('site_url') . 'hirek/' . $value['slug'] . '/' . $value['id']; ?>" class="btn btn-sm btn-primary">Tovább <i class="fa fa-angle-double-right"></i></a> 
                                         </div>
                                     </div>
                                 </div>
