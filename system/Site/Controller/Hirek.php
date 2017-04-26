@@ -35,13 +35,11 @@ class Hirek extends SiteController {
         // szűrési feltételeknek megfelelő összes rekord száma
         $hirek_count = $this->hirek_model->blog_pagination_count_query();
         $pagine->set_total($hirek_count);
-        //$language_code = ($this->registry->lang == 'hu') ? '' : $this->registry->lang;
         // lapozó linkek
         $data['pagine_links'] = $pagine->page_links($this->request->get_uri('path_full'));
         //hír kategóriák
         $data['hirek_categories'] = $this->hirek_model->get_blog_categories();
 
-//var_dump($data);die;
         $view = new View();
         $view->setHelper(array('url_helper', 'str_helper'));
         $view->render('hirek/tpl_hirek', $data);
@@ -90,10 +88,8 @@ class Hirek extends SiteController {
 
         // szűrési feltételeknek megfelelő összes rekord száma
         $blog_count = $this->hirek_model->blog_pagination_count_query();
-
         $pagine->set_total($blog_count);
         // lapozó linkek
-        //$language_code = ($this->registry->lang == 'hu') ? '' : $this->registry->lang;
         $data['pagine_links'] = $pagine->page_links($this->request->get_uri('path_full'));
 
         $data['title'] = $this->view->category_name;
