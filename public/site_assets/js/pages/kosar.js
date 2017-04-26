@@ -1,4 +1,4 @@
-var Kalkulator = function () {
+var Kosar = function () {
 
     var felhasznalas_celja_selected;
 
@@ -328,15 +328,62 @@ var Kalkulator = function () {
         });
     }
 
+
+
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-top-right",
+        "onclick": null,
+        "showDuration": "1000",
+        "hideDuration": "1000",
+        "timeOut": "8000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    var clearCart = function(){
+        $("#clear-cart-button").on('click', function(){
+            console.log('kosár törlése');
+
+            $.ajax({
+                type: "POST",
+                url: "kosar/clear", //put the url of your php file here
+                //data: $('#dummy').serialize(),
+                beforeSend: function () {
+                    //$('#submit-button').addClass('disabled');
+                    $('#clear-cart-button').addClass('button-loading');
+                },
+                success: function (result) {
+                    setTimeout(function () {
+                        toastr['success'](result.message);
+                        //$('#ajax_message').html(data);
+                        $('#clear-cart-button').removeClass('button-loading');
+                        $('#clear-cart-button').removeAttr('disabled');
+                        $('#cart_items_number').html(result.items_number);
+
+                    }, 300);
+                }
+            });
+
+        });
+    }
+
+
     return {
         //main function to initiate the module
         init: function () {
             felhasznalas_celja_handler();
             submit_form();
+            clearCart();
         }
     };
 }();
 
 jQuery(document).ready(function ($) {
-    Kalkulator.init();
+    Kosar.init();
 });

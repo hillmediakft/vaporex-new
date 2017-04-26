@@ -1,5 +1,20 @@
 var Termekek = function () {
 
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-top-right",
+        "onclick": null,
+        "showDuration": "1000",
+        "hideDuration": "1000",
+        "timeOut": "8000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
     var equalHeights = function () {
         setTimeout(function () {
             $('.product-grid div.product-container').equalHeights();
@@ -25,13 +40,16 @@ var Termekek = function () {
                     //$('#submit-button').addClass('disabled');
                     $('#add_to_cart_button').addClass('button-loading');
                 },
-                success: function (data) {
+                success: function (result) {
                     setTimeout(function () {
-                        $('#ajax_message').html(data);
+                        toastr['success'](result.message);
                         $('#add_to_cart_button').removeClass('button-loading');
                         $('#add_to_cart_button').removeAttr('disabled');
+                        // kosár elemszám módosítása a fejlécben
+                        $('#cart_items_number').html(result.items_number);
                     }, 300);
                 }
+
             });
 
         });
